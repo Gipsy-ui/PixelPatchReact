@@ -1,4 +1,3 @@
-
 export const ROUTES = {
   HOME: '/',
   DASHBOARD: '/dashboard',
@@ -19,6 +18,7 @@ export const ROUTES = {
   REPAIR_PENDING: '/repairs/:id/pending',
   DEVICES: '/devices',
   SETTINGS: '/settings',
+
   BUSINESS: {
     DASHBOARD: '/business',
     PROFILE: '/business/profile',
