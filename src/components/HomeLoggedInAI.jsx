@@ -317,9 +317,7 @@ function ClientAiLanding() {
             <div>
               <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Connect With Us</h3>
               <ul className="mt-4 space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Facebook</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Instagram</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">X (Twitter)</a></li>
+                <li><a href="https://www.facebook.com/profile.php?id=61583531965173" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Facebook</a></li>
               </ul>
             </div>
           </div>
