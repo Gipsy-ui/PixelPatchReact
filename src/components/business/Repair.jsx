@@ -81,7 +81,7 @@ const Repair = () => {
   return (
     <main className="flex-1 overflow-y-auto p-6">
       <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Requests</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Repair</h1>
         <div className="relative mt-4 sm:mt-0">
           <input
             type="text"
@@ -149,7 +149,7 @@ const Repair = () => {
                         setSelectedRequestId(request.id.toString());
                         setIsRejectionModalOpen(true);
                       }}
-                      className="text-red-600 hover:text-red-800 font-medium"
+                      className="bg-white text-red-600 hover:text-red-800 font-medium"
                     >
                       Reject
                     </button>

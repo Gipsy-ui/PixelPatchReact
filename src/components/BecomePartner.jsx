@@ -5,61 +5,25 @@ const BecomePartner = () => {
   return (
     <div className="bg-white text-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <header className="border-b border-gray-200">
-          <nav className="flex items-center justify-between h-20">
-            <div className="flex-shrink-0">
-              <Link to="/" className="text-2xl font-extrabold text-blue-600">PixelPatch</Link>
-            </div>
-
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-6">
-                <Link to="/" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</Link>
-                <Link to="/ai-assistant" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">AI Assistant</Link>
-                <Link to="/services" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Services</Link>
-                <Link to="/partner" className="text-gray-900 font-medium px-3 py-2 rounded-md text-sm">Become a Partner</Link>
-              </div>
-            </div>
-
-            <div className="hidden md:block">
-              <div className="ml-4 flex items-center space-x-4">
-                <button className="text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors" aria-label="Search">
-                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </button>
-                <button className="text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors" aria-label="Messages">
-                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                </button>
-                <Link to="/profile" className="flex items-center justify-center h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors">
-                  <img className="h-full w-full object-cover" src="https://placehold.co/40x40/e0f2fe/3b82f6?text=U&font=inter" alt="User avatar" />
-                </Link>
-              </div>
-            </div>
-
-            <div className="-mr-2 flex md:hidden">
-              <button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
-                <span className="sr-only">Open main menu</span>
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-              </button>
-            </div>
-          </nav>
-        </header>
-
         <main>
           <div className="py-16 md:py-24">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
               <div className="text-center md:text-left">
                 <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight">Grow your Repair Business with <span className="text-blue-600">PixelPatch</span></h1>
                 <p className="mt-6 text-lg text-gray-600 max-w-lg mx-auto md:mx-0">Join our network of trusted repair shops and connect with clients who need electronic repairs every day.</p>
+                
                 <div className="mt-8 flex justify-center md:justify-start">
-                  <a href="#" className="flex items-center justify-center px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors shadow-md">Register Your Business
-                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                  </a>
+                  <Link
+                  to="/business-sign-up/step-1" 
+                  className="flex items-center justify-center px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors shadow-md"
+                  >
+                    Register Your Business
+                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4l-8 8-4-4-6 6"/>                       
+                    </svg>
+                  </Link>
                 </div>
+                
               </div>
               <div className="flex items-center justify-center">
                 <img src="https://placehold.co/500x350/e0f2fe/3b82f6?text=Partner+Working&font=inter" alt="A technician wearing goggles works on a circuit board" className="rounded-lg w-full max-w-md md:max-w-full h-auto shadow-lg" />
@@ -211,54 +175,6 @@ const BecomePartner = () => {
             </div>
           </div>
         </main>
-
-        <footer className="bg-white border-t border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 py-16">
-              <div className="col-span-2 md:col-span-4 lg:col-span-1">
-                <Link to="/" className="text-2xl font-extrabold text-blue-600">PixelPatch</Link>
-                <p className="mt-3 text-sm text-gray-600">Where technology and expertise meet to bring your gadgets back to life.</p>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Quick Links</h3>
-                <ul className="mt-4 space-y-3">
-                  <li><Link to="/ai-assistant" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">AI Assistant</Link></li>
-                  <li><Link to="/find-shop" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Find Service</Link></li>
-                  <li><Link to="/services" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Services</Link></li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Company</h3>
-                <ul className="mt-4 space-y-3">
-                  <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">About</a></li>
-                  <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Career</a></li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Support</h3>
-                <ul className="mt-4 space-y-3">
-                  <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Help & FAQ</a></li>
-                  <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Contact</a></li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Legal</h3>
-                <ul className="mt-4 space-y-3">
-                  <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Terms</a></li>
-                  <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Privacy</a></li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="border-t border-gray-100 pt-8 pb-12 text-center">
-              <p className="text-sm text-gray-500">© {new Date().getFullYear()} PixelPatch. All rights reserved.</p>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   );

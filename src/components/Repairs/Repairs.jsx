@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import TopNavigation from '../shared/TopNavigation';
-import Footer from '../shared/Footer';
 import { ROUTES } from '../../constants/routes';
 
 const RepairCard = ({ status, date, deviceName, deviceType, repairType, message }) => {
@@ -120,63 +118,7 @@ const Repairs = () => {
 
   return (
     <div className="bg-gray-50 text-gray-900 flex flex-col min-h-screen">
-      {/* 1. Header Navigation */}
-      <header className="border-b border-gray-200 bg-white w-full flex-shrink-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <Link to={ROUTES.HOME} className="text-2xl font-extrabold text-blue-600">PixelPatch</Link>
-            </div>
-
-            {/* Navigation Links (Desktop) */}
-            <TopNavigation />
-
-            {/* Icons (Desktop) */}
-            <div className="hidden md:block">
-              <div className="ml-4 flex items-center space-x-4">
-                {/* Notification Icon */}
-                <button className="text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors">
-                  <span className="sr-only">Notifications</span>
-                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                  </svg>
-                </button>
-                {/* Chat Icon */}
-                <button className="text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors">
-                  <span className="sr-only">Messages</span>
-                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.76v-1.503c0-.858.694-1.553 1.553-1.553h.002c.859 0 1.554.695 1.554 1.553v1.503A1.553 1.553 0 013.805 14.313H3.803A1.553 1.553 0 012.25 12.76zm3.003-1.503v1.503c0 .858.695 1.553 1.553 1.553h.002c.859 0 1.554-.695 1.554-1.553v-1.503c0-.858-.695-1.553-1.554-1.553h-.002a1.553 1.553 0 00-1.553 1.553zm3.004v1.503c0 .858.695 1.553 1.553 1.553h.002c.859 0 1.554-.695 1.554-1.553v-1.503c0-.858-.695-1.553-1.554-1.553h-.002a1.553 1.553 0 00-1.553 1.553zm10.493-1.553h-.002a1.553 1.553 0 00-1.553 1.553v1.503c0 .858.694 1.553 1.553 1.553h.002c.859 0 1.553-.695 1.553-1.553v-1.503c0-.858-.694-1.553-1.553-1.553z" />
-                  </svg>
-                </button>
-                {/* Profile Avatar */}
-                <Link to={ROUTES.PROFILE} className="flex items-center justify-center h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors">
-                  <span className="sr-only">Open user menu</span>
-                  <img className="h-full w-full object-cover" src="https://placehold.co/40x40/e0f2fe/3b82f6?text=U&font=inter" alt="User avatar" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Mobile Menu Button (Hamburger) */}
-            <div className="-mr-2 flex md:hidden">
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                type="button"
-                className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-                aria-controls="mobile-menu"
-                aria-expanded="false"
-              >
-                <span className="sr-only">Open main menu</span>
-                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
-                </svg>
-              </button>
-            </div>
-          </nav>
-        </div>
-      </header>
-
-      {/* 2. Main Content */}
+      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
         {/* Page Title */}
         <h1 className="text-3xl font-bold text-gray-900 mb-6">Repairs</h1>
@@ -188,10 +130,10 @@ const Repairs = () => {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`whitespace-nowrap py-3 px-1 text-sm font-medium ${
+                className={`bg-white whitespace-nowrap py-3 px-1 text-sm font-medium ${
                   activeTab === tab
-                    ? 'tab-active border-b-2 border-blue-900'
-                    : 'text-gray-500 hover:text-gray-700 border-b-2 border-transparent'
+                    ? 'tab-active border-b-2 border-gray-500'
+                    : 'text-gray-500 hover:text-gray-700 border-b-2 border-gray-500'
                 }`}
                 aria-current={activeTab === tab ? 'page' : undefined}
               >
@@ -213,7 +155,7 @@ const Repairs = () => {
               <div key={index} className="relative">
                 <RepairCard {...repair} />
                 {viewPath && (
-                  <div className="absolute inset-x-0 bottom-4 flex justify-center">
+                  <div className=" flex justify-center absolute top-[65%] right-5 ">
                     <Link
                       to={viewPath}
                       className="rounded-md bg-white border border-gray-200 px-4 py-2 text-sm font-medium text-blue-600 hover:bg-gray-50 shadow-sm"
@@ -234,9 +176,6 @@ const Repairs = () => {
           </div>
         )}
       </main>
-      
-      {/* 3. Footer */}
-      <Footer />
     </div>
   );
 };

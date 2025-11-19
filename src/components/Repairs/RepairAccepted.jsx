@@ -47,56 +47,6 @@ const RepairAccepted = () => {
   const { device, shop, assessment, quotation, status } = mockRepair;
   return (
     <div className="bg-gray-50 text-gray-900 flex flex-col min-h-screen font-inter">
-      {/* Header Navigation */}
-      <header className="border-b border-gray-200 bg-white w-full flex-shrink-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <div className="flex-shrink-0">
-              <span className="text-2xl font-extrabold text-blue-600">PixelPatch</span>
-            </div>
-            {/* Navigation Links */}
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-6">
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">AI Assistant</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Services</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Become a Partner</a>
-              </div>
-            </div>
-            {/* Icons */}
-            <div className="hidden md:block">
-              <div className="ml-4 flex items-center space-x-4">
-                {/* Notification Icon */}
-                <button className="text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors">
-                  <span className="sr-only">Notifications</span>
-                  {/* ...icon svg... */}
-                </button>
-                {/* Chat Icon */}
-                <button className="text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors">
-                  <span className="sr-only">Messages</span>
-                  {/* ...icon svg... */}
-                </button>
-                {/* Profile Avatar */}
-                <div className="relative">
-                  <button className="flex items-center justify-center h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors">
-                    <span className="sr-only">Open user menu</span>
-                    <img className="h-full w-full object-cover" src="https://placehold.co/40x40/e0f2fe/3b82f6?text=U&font=inter" alt="User avatar" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/* Mobile Menu Button */}
-            <div className="-mr-2 flex md:hidden">
-              <button type="button" className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
-                <span className="sr-only">Open main menu</span>
-                {/* ...icon svg... */}
-              </button>
-            </div>
-          </nav>
-        </div>
-      </header>
-
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
         {/* Status Banner */}
@@ -268,60 +218,6 @@ const RepairAccepted = () => {
           </button>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 mt-auto w-full">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 py-16">
-            {/* Column 1: Logo & Slogan */}
-            <div className="col-span-2 md:col-span-4 lg:col-span-1">
-              <span className="text-2xl font-extrabold text-blue-600">PixelPatch</span>
-              <p className="mt-3 text-sm text-gray-600">
-                Where technology and expertise meet to bring your gadgets back to life.
-              </p>
-            </div>
-            {/* Column 2: Quick Links */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Quick Links</h3>
-              <ul className="mt-4 space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">AI Assistant</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Find Service</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Partner</a></li>
-              </ul>
-            </div>
-            {/* Column 3: Company */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Company</h3>
-              <ul className="mt-4 space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">About Us</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Career</a></li>
-              </ul>
-            </div>
-            {/* Column 4: Support */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Support</h3>
-              <ul className="mt-4 space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Help Center</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Privacy Policy</a></li>
-              </ul>
-            </div>
-            {/* Column 5: Connect */}
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Connect With Us</h3>
-              <ul className="mt-4 space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Facebook</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Instagram</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">X (Twitter)</a></li>
-              </ul>
-            </div>
-          </div>
-          {/* Sub-footer */}
-          <div className="border-t border-gray-200 py-6">
-            <p className="text-center text-sm text-gray-500">&copy; 2025 PixelPatch Inc. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

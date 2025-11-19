@@ -13,21 +13,6 @@ const ShopProfile = () => {
     <div className="bg-white text-gray-900">
       <header className="border-b border-gray-200 bg-white w-full flex-shrink-0 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center justify-between h-20">
-            <div className="flex-shrink-0">
-              <Link to="/" className="text-2xl font-extrabold text-blue-600">PixelPatch</Link>
-            </div>
-
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-6">
-                <Link to="/" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</Link>
-                <Link to="/ai-assistant" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">AI Assistant</Link>
-                <Link to="/services" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Services</Link>
-                <Link to="/partner" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Become a Partner</Link>
-              </div>
-            </div>
-
-          </nav>
         </div>
       </header>
 
@@ -205,10 +190,10 @@ const ShopProfile = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="text-sm text-gray-600">23</span>
-                          <button className="text-gray-500 hover:text-blue-600">
+                          <button className="bg-white text-gray-500 hover:text-blue-600 border-gray-500 hover:border-blue-600">
                             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6.633 10.5c.8-1.03 1.9-1.8 3.1-2.2v1.1c-1 .4-1.8.9-2.4 1.5L6.6 10.5zM17.4 10.5c.8-1.03 1.9-1.8 3.1-2.2v1.1c-1 .4-1.8.9-2.4 1.5L17.4 10.5zM12 3a9 9 0 00-9 9c0 4.97 4.03 9 9 9s9-4.03 9-9c0-4.97-4.03-9-9-9zm-1.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm6 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
                           </button>
-                          <button className="text-gray-500 hover:text-gray-900">
+                          <button className="bg-white text-gray-500 hover:text-blue-600 border-gray-500 hover:border-blue-600">
                             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" /></svg>
                           </button>
                         </div>
@@ -230,10 +215,10 @@ const ShopProfile = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="text-sm text-gray-600">20</span>
-                          <button className="text-gray-500 hover:text-blue-600">
+                          <button className="bg-white text-gray-500 hover:text-blue-600 border-gray-500 hover:border-blue-600">
                             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6.633 10.5c.8-1.03 1.9-1.8 3.1-2.2v1.1c-1 .4-1.8.9-2.4 1.5L6.6 10.5zM17.4 10.5c.8-1.03 1.9-1.8 3.1-2.2v1.1c-1 .4-1.8.9-2.4 1.5L17.4 10.5zM12 3a9 9 0 00-9 9c0 4.97 4.03 9 9 9s9-4.03 9-9c0-4.97-4.03-9-9-9zm-1.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm6 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
                           </button>
-                          <button className="text-gray-500 hover:text-gray-900">
+                          <button className="bg-white text-gray-500 hover:text-blue-600 border-gray-500 hover:border-blue-600">
                             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" /></svg>
                           </button>
                         </div>
@@ -255,10 +240,10 @@ const ShopProfile = () => {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="text-sm text-gray-600">12</span>
-                          <button className="text-gray-500 hover:text-blue-600">
+                          <button className="bg-white text-gray-500 hover:text-blue-600 border-gray-500 hover:border-blue-600">
                             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6.633 10.5c.8-1.03 1.9-1.8 3.1-2.2v1.1c-1 .4-1.8.9-2.4 1.5L6.6 10.5zM17.4 10.5c.8-1.03 1.9-1.8 3.1-2.2v1.1c-1 .4-1.8.9-2.4 1.5L17.4 10.5zM12 3a9 9 0 00-9 9c0 4.97 4.03 9 9 9s9-4.03 9-9c0-4.97-4.03-9-9-9zm-1.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm6 0a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
                           </button>
-                          <button className="text-gray-500 hover:text-gray-900">
+                          <button className="bg-white text-gray-500 hover:text-blue-600 border-gray-500 hover:border-blue-600">
                             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 12.75a.75.75 0 110-1.5.75.75 0 010 1.5zM12 18.75a.75.75 0 110-1.5.75.75 0 010 1.5z" /></svg>
                           </button>
                         </div>
@@ -281,56 +266,6 @@ const ShopProfile = () => {
           </div>
         </div>
       </main>
-
-      <footer className="bg-white border-t border-gray-200 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 py-16">
-            <div className="col-span-2 md:col-span-4 lg:col-span-1">
-              <a href="#" className="text-2xl font-extrabold text-blue-600">PixelPatch</a>
-              <p className="mt-3 text-sm text-gray-600">Where technology and expertise meet to bring your gadgets back to life.</p>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Quick Links</h3>
-              <ul className="mt-4 space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">AI Assistant</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Find Service</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Partner</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Company</h3>
-              <ul className="mt-4 space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">About</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Career</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Support</h3>
-              <ul className="mt-4 space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Help Center</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Privacy Policy</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Connect With Us</h3>
-              <ul className="mt-4 space-y-3">
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Facebook</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Instagram</a></li>
-                <li><a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">X (Twitter)</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 py-6">
-            <p className="text-center text-sm text-gray-500">&copy; 2025 PixelPatch Inc. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

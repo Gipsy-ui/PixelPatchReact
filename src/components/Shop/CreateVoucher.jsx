@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+
 function ShopDiscountModal({ onClose }) {
   const [discountType, setDiscountType] = useState('percentage'); // 'percentage' or 'fixed'
   const [code, setCode] = useState('OCTFEST2025');
@@ -117,3 +120,13 @@ function ShopDiscountModal({ onClose }) {
     </div>
   );
 }
+
+ShopDiscountModal.propTypes = {
+  onClose: PropTypes.func,
+};
+
+ShopDiscountModal.defaultProps = {
+  onClose: () => {},
+};
+
+export default ShopDiscountModal;

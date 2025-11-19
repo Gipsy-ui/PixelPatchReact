@@ -91,6 +91,8 @@ const SignUp = () => {
         e.preventDefault();
         // Add dito yung form submission logic
         console.log(formData);
+
+        window.location.replace("/dashboard-ai")
     };
 
     const getBorderClass = (field) => {

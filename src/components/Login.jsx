@@ -39,6 +39,7 @@ const Login = () => {
     if (validateForm()) {
       console.log('Form submitted:', formData);
     }
+    window.location.replace("/dashboard-ai")
   };
 
   const handleInputChange = (e) => {
@@ -178,6 +179,7 @@ const Login = () => {
               type="submit"
               className="bg-sky-500 hover:bg-sky-600 text-white w-full py-3 rounded-lg transition font-semibold shadow-md hover:shadow-lg"
             >
+              <link ></link>
               Log In
             </button>
 
