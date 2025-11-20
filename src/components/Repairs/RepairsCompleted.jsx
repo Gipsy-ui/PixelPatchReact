@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-export default function App() {
-  return <ClientRepairFinished />;
-}
-function ClientRepairFinished() {
+// The Client Repair Completed Page Component
+export default function ClientRepairCompleted() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileButtonRef = useRef(null);
   const profileDropdownRef = useRef(null);
 
+  // Effect to handle clicking outside the dropdown
   useEffect(() => {
     function handleClickOutside(event) {
       if (
@@ -20,7 +19,6 @@ function ClientRepairFinished() {
         setIsProfileOpen(false);
       }
     }
-
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
@@ -29,13 +27,110 @@ function ClientRepairFinished() {
 
   return (
     <div className="bg-gray-50 text-gray-900 flex flex-col min-h-screen" style={{ fontFamily: "'Inter', sans-serif" }}>
-      {/* Main Content */}
+      
+      {/* 1. Header Navigation */}
+      <header className="border-b border-gray-200 bg-white w-full flex-shrink-0 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center justify-between h-20">
+            
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <a href="#" className="text-2xl font-extrabold text-blue-600">
+                PixelPatch
+              </a>
+            </div>
+
+            {/* Navigation Links (Desktop) */}
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-6">
+                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Home</a>
+                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">AI Assistant</a>
+                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Services</a>
+                <a href="#" className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">Become a Partner</a>
+              </div>
+            </div>
+
+            {/* Icons (Desktop) */}
+            <div className="hidden md:flex items-center space-x-4">
+              {/* Notification Icon */}
+              <button className="text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors">
+                <span className="sr-only">Notifications</span>
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                </svg>
+              </button>
+              {/* Chat Icon */}
+              <button className="text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors">
+                <span className="sr-only">Messages</span>
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.76v-1.503c0-.858.694-1.553 1.553-1.553h.002c.859 0 1.554.695 1.554 1.553v1.503A1.553 1.553 0 013.805 14.313H3.803A1.553 1.553 0 012.25 12.76zm3.003-1.503v1.503c0 .858.695 1.553 1.553 1.553h.002c.859 0 1.554-.695 1.554-1.553v-1.503c0-.858-.695-1.553-1.554-1.553h-.002a1.553 1.553 0 00-1.553 1.553zm3.004v1.503c0 .858.695 1.553 1.553 1.553h.002c.859 0 1.554-.695 1.554-1.553v-1.503c0-.858-.695-1.553-1.554-1.553h-.002a1.553 1.553 0 00-1.553 1.553zm10.493-1.553h-.002a1.553 1.553 0 00-1.553 1.553v1.503c0 .858.694 1.553 1.553 1.553h.002c.859 0 1.553-.695 1.553-1.553v-1.503c0-.858-.694-1.553-1.553-1.553zM9.75 12c0-.858.695-1.553 1.554-1.553h.002c.859 0 1.553.695 1.553 1.553v1.503c0 .858-.694 1.553-1.553 1.553h-.002c-.859 0-1.554-.695-1.554-1.553V12zm3.003 0v1.503c0 .858.695 1.553 1.553 1.553h.002c.859 0 1.554-.695 1.554-1.553V12c0-.858-.695-1.553-1.554-1.553h-.002a1.553 1.553 0 00-1.553 1.553z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 19.5v2.25c0 .621.504 1.125 1.125 1.125h.375c.621 0 1.125-.504 1.125-1.125V19.5m-3.375 0v2.25c0 .621.504 1.125 1.125 1.125h.375c.621 0 1.125-.504 1.125-1.125V19.5m-3.375 0h3.375m-3.375 0v-1.5c0-1.036.84-1.875 1.875-1.875h.375c1.036 0 1.875.84 1.875 1.875v1.5m-3.375 0h3.375M9 19.5v2.25c0 .621.504 1.125 1.125 1.125h.375c.621 0 1.125-.504 1.125-1.125V19.5m-3.375 0v2.25c0 .621.504 1.125 1.125 1.125h.375c.621 0 1.125-.504 1.125-1.125V19.5m-3.375 0h3.375m-3.375 0v-1.5c0-1.036.84-1.875 1.875-1.875h.375c1.036 0 1.875.84 1.875 1.875v1.5m-3.375 0h3.375M4.5 19.5v2.25c0 .621.504 1.125 1.125 1.125h.375c.621 0 1.125-.504 1.125-1.125V19.5m-3.375 0v2.25c0 .621.504 1.125 1.125 1.125h.375c.621 0 1.125-.504 1.125-1.125V19.5m-3.375 0h3.375m-3.375 0v-1.5c0-1.036.84-1.875 1.875-1.875h.375c1.036 0 1.875.84 1.875 1.875v1.5m-3.375 0h3.375" />
+                </svg>
+              </button>
+              
+              {/* Profile Avatar */}
+              <div className="relative">
+                <button 
+                  ref={profileButtonRef}
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="flex items-center justify-center h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors"
+                >
+                  <span className="sr-only">Open user menu</span>
+                  <img className="h-full w-full object-cover" src="https://placehold.co/40x40/e0f2fe/3b82f6?text=U&font=inter" alt="User avatar" />
+                </button>
+                
+                {/* Profile Dropdown */}
+                {isProfileOpen && (
+                  <div ref={profileDropdownRef} className="absolute right-0 mt-2 w-64 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                    <div className="py-1" role="none">
+                      <div className="flex items-center px-4 py-3 border-b border-gray-200">
+                        <img className="h-10 w-10 rounded-full" src="https://placehold.co/40x40/dbeafe/1e40af?text=JD&font=inter" alt="User Avatar" />
+                        <div className="ml-3">
+                          <p className="text-sm font-semibold text-gray-900">John Doe</p>
+                          <p className="text-sm text-gray-500">johndoe@gmail.com</p>
+                        </div>
+                      </div>
+                      <div className="py-1">
+                        <a href="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                        <a href="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Repairs</a>
+                        <a href="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Devices</a>
+                        <a href="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">AI Assistant</a>
+                      </div>
+                      <div className="py-1 border-t border-gray-200">
+                        <a href="#" className="block px-4 py-3 text-sm text-blue-600 hover:bg-gray-100">Switch to Business</a>
+                      </div>
+                      <div className="py-1 border-t border-gray-200">
+                        <a href="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                        <a href="#" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Help</a>
+                      </div>
+                      <div className="py-1 border-t border-gray-200">
+                        <a href="#" className="block px-4 py-3 text-sm text-red-600 hover:bg-gray-100">Log Out</a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="-mr-2 flex md:hidden">
+              <button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                <span className="sr-only">Open main menu</span>
+                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+              </button>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+      {/* 2. Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
         {/* Status Banner */}
-        <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-800 p-4 rounded-lg flex justify-between items-center mb-6">
-          <p className="font-medium">Your device is ready for pickup.</p>
-          {/* Corrected status tag to Completed based on stepper */}
-          <span className="text-xs font-medium bg-green-200 text-green-900 px-2.5 py-0.5 rounded-full">
+        <div className="bg-gray-100 border-l-4 border-gray-400 text-gray-800 p-4 rounded-lg flex justify-between items-center mb-6">
+          <p className="font-medium">Repair request completed.</p>
+          <span className="text-xs font-medium bg-gray-200 text-gray-800 px-2.5 py-0.5 rounded-full">
             Completed
           </span>
         </div>
@@ -46,71 +141,27 @@ function ClientRepairFinished() {
             {/* Step 1: Ready (Complete) */}
             <li className="flex md:w-full items-center text-blue-600 after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-600 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
               <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
-                <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6 mr-2.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
                 Ready
               </span>
             </li>
             {/* Step 2: In Progress (Complete) */}
             <li className="flex md:w-full items-center text-blue-600 after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-600 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
               <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
-                <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6 mr-2.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
                 In Progress
               </span>
             </li>
             {/* Step 3: Delivery (Complete) */}
             <li className="flex md:w-full items-center text-blue-600 after:content-[''] after:w-full after:h-1 after:border-b after:border-blue-600 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
               <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
-                <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6 mr-2.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  ></path>
-                </svg>
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
                 Delivery
               </span>
             </li>
             {/* Step 4: Completed (Complete) */}
             <li className="flex items-center text-blue-600">
-              <svg
-                className="w-5 h-5 sm:w-6 sm:h-6 mr-2.5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
               Completed
             </li>
           </ol>
@@ -118,6 +169,7 @@ function ClientRepairFinished() {
 
         {/* Main Content Area */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          {/* Request Information */}
           <div className="relative pb-6 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Request Information</h2>
             <div className="absolute top-0 right-0 text-right">
@@ -156,7 +208,9 @@ function ClientRepairFinished() {
             </div>
           </div>
 
+          {/* Shop Info & Reference Images */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-b border-gray-200 pb-6">
+            {/* Shop Information */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Shop Information</h2>
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
@@ -194,7 +248,9 @@ function ClientRepairFinished() {
             </div>
           </div>
 
+          {/* Assessment & Quotation */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-b border-gray-200 pb-6">
+            {/* Assessment */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Assessment</h2>
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3 text-sm">
@@ -228,6 +284,7 @@ function ClientRepairFinished() {
               </div>
             </div>
 
+            {/* Quotation */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Quotation</h2>
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3 text-sm">
@@ -262,13 +319,11 @@ function ClientRepairFinished() {
                     <span className="font-medium text-gray-800">6 Months</span>
                   </div>
                 </div>
-                <a href="#" className="text-blue-600 hover:underline text-xs pt-2 inline-block">
-                  More...
-                </a>
               </div>
             </div>
           </div>
 
+          {/* Transaction Details */}
           <div className="grid grid-cols-1 pt-6 border-b border-gray-200 pb-6">
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Transaction Details</h2>
@@ -305,6 +360,7 @@ function ClientRepairFinished() {
             </div>
           </div>
           
+          {/* Your Review Section */}
           <div className="grid grid-cols-1 pt-6">
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Review</h2>
@@ -339,6 +395,7 @@ function ClientRepairFinished() {
           
         </div>
 
+        {/* Support Center Banner */}
         <div className="mt-6 bg-blue-100 p-4 rounded-lg flex items-center justify-between">
           <p className="text-sm text-blue-800">
             <span className="font-semibold">Support Center:</span>
@@ -349,12 +406,114 @@ function ClientRepairFinished() {
           </p>
         </div>
 
-        <div className="mt-8 flex flex-col sm:flex-row justify-end gap-3">
-          <button className="rounded-lg border border-transparent bg-green-600 py-2 px-5 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-            Review
-          </button>
-        </div>
+        {/* Action Buttons */}
+        {/* Removed as per "Completed" state in requirements, usually no actions left */}
       </main>
+
+      {/* 3. Footer */}
+      <footer className="bg-white border-t border-gray-200 mt-auto w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 py-16">
+            {/* Column 1: Logo & Slogan */}
+            <div className="col-span-2 md:col-span-4 lg:col-span-1">
+              <a href="#" className="text-2xl font-extrabold text-blue-600">
+                PixelPatch
+              </a>
+              <p className="mt-3 text-sm text-gray-600">
+                Where technology and expertise meet to bring your gadgets back to life.
+              </p>
+            </div>
+
+            {/* Column 2: Quick Links */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Quick Links</h3>
+              <ul className="mt-4 space-y-3">
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    AI Assistant
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Find Service
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Partner
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 3: Company */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Company</h3>
+              <ul className="mt-4 space-y-3">
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Career
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 4: Support */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Support</h3>
+              <ul className="mt-4 space-y-3">
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Help Center
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Terms of Service
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Privacy Policy
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 5: Connect */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Connect With Us</h3>
+              <ul className="mt-4 space-y-3">
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Facebook
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Instagram
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    X (Twitter)
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Sub-footer */}
+          <div className="border-t border-gray-200 py-6">
+            <p className="text-center text-sm text-gray-500">&copy; 2025 PixelPatch Inc. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

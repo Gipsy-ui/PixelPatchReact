@@ -86,7 +86,7 @@ const RepairRejected = () => {
       </div>
 
       <div className="mt-6">
-        <Link to={ROUTES.BUSINESS.REPAIRS} className="inline-block rounded-lg border border-gray-200 bg-white py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <Link to={ROUTES.REPAIRS} className="inline-block rounded-lg border border-gray-200 bg-white py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50">
           Back to repairs
         </Link>
       </div>

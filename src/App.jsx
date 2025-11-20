@@ -16,15 +16,16 @@ import BusinessSignUpPg2 from './components/business/BusinessSignUpPg2';
 import BusinessSignUpPg3 from './components/business/BusinessSignUpPg3';
 import BusinessSignUpPg4 from './components/business/BusinessSignUpPg4';
 import ClientBooking from './components/Client-Booking';
+import ClientRepairRequestModalPage from './components/ClientRepairRequestModalPage';
 import EmailVerifyPage from './components/EmailVerifyPage';
 import RegistrationPopUp from './components/RegistrationPopUp';
 import ReviewModalOnly from './components/ReviewModalOnly';
 import Repairs from './components/Repairs/Repairs';
-import RepairPending from './components/Repairs/RepairPending';
-import RepairAccepted from './components/Repairs/RepairAccepted';
-import RepairInProgress from './components/Repairs/RepairInProgress';
-import RepairDone from './components/Repairs/RepairDone';
-import RepairFinished from './components/Repairs/RepairFinished';
+import RepairPending from './components/Repairs/RepairsPending';
+import RepairAccepted from './components/Repairs/RepairsAccepted';
+import RepairInProgress from './components/Repairs/RepairsInProgress';
+import RepairDone from './components/Repairs/RepairsDone';
+import ClientRepairCompleted from './components/Repairs/RepairsCompleted';
 import ShopCreateVoucher from './components/Shop/CreateVoucher';
 import ShopDetails from './components/Shop/Details';
 import ShopDetailsEditable from './components/Shop/DetailsEditable';
@@ -44,6 +45,8 @@ import BusinessReviews from './components/business/BusinessReviews';
 import BusinessProfile from './components/business/BusinessProfile';
 import ClientAiLanding from './components/HomeLoggedInAI';
 import PixelPatchLanding from './components/HomeLoggedInAIBefore';
+import ClientMessages from './components/Messages';
+
 // Import business section components
 import { businessRoutes } from './components/business/routes';
 const {
@@ -65,6 +68,7 @@ function App() {
         <Routes>
           <Route element={<AppLayout />}>
             <Route path={ROUTES.DASHBOARD_AI} element={<ClientAiLanding />} />
+            <Route path={ROUTES.MESSAGES} element={<ClientMessages />} />
             <Route path={ROUTES.SERVICES} element={<Services />} />
             <Route path={ROUTES.PARTNER} element={<BecomePartner />} />
             <Route path={ROUTES.ACCOUNT_SIGNUP} element={<AccountSignUp />} />
@@ -73,6 +77,7 @@ function App() {
             <Route path={ROUTES.BUSINESS_SIGNUP.STEP3} element={<BusinessSignUpPg3 />} />
             <Route path={ROUTES.BUSINESS_SIGNUP.STEP4} element={<BusinessSignUpPg4 />} />
             <Route path={ROUTES.CLIENT_BOOKING} element={<ClientBooking />} />
+            <Route path={ROUTES.CLIENT_REPAIR_REQUEST_MODAL} element={<ClientRepairRequestModalPage />} />
             <Route path={ROUTES.EMAIL_VERIFY} element={<EmailVerifyPage />} />
             <Route path={ROUTES.REGISTRATION_POPUP} element={<RegistrationPopUp />} />
             <Route path={ROUTES.REVIEW_MODAL} element={<ReviewModalOnly />} />
@@ -92,12 +97,12 @@ function App() {
             <Route path={ROUTES.REPAIRS_PENDING_LIST} element={<RepairPending />} />
             <Route path={ROUTES.REPAIRS_ACCEPTED} element={<RepairAccepted />} />
             <Route path={ROUTES.REPAIRS_IN_PROGRESS} element={<RepairInProgress />} />
+            <Route path={ROUTES.REPAIRS_REJECTED}element={<RepairRejected />} />
             <Route path={ROUTES.REPAIRS_DONE} element={<RepairDone />} />
-            <Route path={ROUTES.REPAIRS_FINISHED} element={<RepairFinished />} />
+            <Route path={ROUTES.REPAIRS_COMPLETED} element={<ClientRepairCompleted />} />
             <Route path={ROUTES.DEVICES} element={<Devices />} />
-
+            
             {/* Business Routes */}
-            <Route path={ROUTES.BUSINESS.DASHBOARD} element={<BusinessDashboard />} />
             <Route path={ROUTES.BUSINESS.PROFILE} element={<BusinessProfile />} />
             <Route path={ROUTES.BUSINESS.REPAIRS} element={<BusinessRepairs />} />
             <Route path={ROUTES.BUSINESS.REPAIR_DETAIL} element={<RepairDetails />} />
@@ -123,6 +128,7 @@ function App() {
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.HOME} element={<Home />} />
           <Route path={ROUTES.DASHBOARD_AI_BEFORE} element={<PixelPatchLanding />} />
+          <Route path={ROUTES.BUSINESS.DASHBOARD} element={<BusinessDashboard />} />
         </Routes>
       </ErrorBoundary>
     </Router>
