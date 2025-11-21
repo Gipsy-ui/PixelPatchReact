@@ -37,7 +37,7 @@ const mockRepair = {
       { name: "Samsung S25 Screen", cost: "4,500.00 PHP" },
       { name: "Samsung Front Camera", cost: "2,000.00 PHP" },
     ],
-    total: "5,000.00 PHP",
+    total: "7,000.00 PHP",
     completion: "5 days",
     warranty: "6 Months",
   },

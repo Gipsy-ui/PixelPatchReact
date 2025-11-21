@@ -31,6 +31,7 @@ export const ROUTES = {
   EMAIL_VERIFY: '/verify-email',
   CLIENT_BOOKING: '/client-booking',
   CLIENT_REPAIR_REQUEST_MODAL: '/client-repair-request-modal',
+  CLIENT_PAYMENT_DETAILS_MODAL: '/client-payment-details-modal',
   REGISTRATION_POPUP: '/registration',
   REVIEW_MODAL: '/review-modal',
   HELP: '/help',

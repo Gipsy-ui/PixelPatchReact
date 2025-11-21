@@ -17,6 +17,7 @@ import BusinessSignUpPg3 from './components/business/BusinessSignUpPg3';
 import BusinessSignUpPg4 from './components/business/BusinessSignUpPg4';
 import ClientBooking from './components/Client-Booking';
 import ClientRepairRequestModalPage from './components/ClientRepairRequestModalPage';
+import ClientPaymentDetailsModal from './components/Repairs/PaymentDetailsModal';
 import EmailVerifyPage from './components/EmailVerifyPage';
 import RegistrationPopUp from './components/RegistrationPopUp';
 import ReviewModalOnly from './components/ReviewModalOnly';
@@ -79,6 +80,7 @@ function App() {
             <Route path={ROUTES.BUSINESS_SIGNUP.STEP4} element={<BusinessSignUpPg4 />} />
             <Route path={ROUTES.CLIENT_BOOKING} element={<ClientBooking />} />
             <Route path={ROUTES.CLIENT_REPAIR_REQUEST_MODAL} element={<ClientRepairRequestModalPage />} />
+            <Route path={ROUTES.CLIENT_PAYMENT_DETAILS_MODAL} element={<ClientPaymentDetailsModal />} />
             <Route path={ROUTES.EMAIL_VERIFY} element={<EmailVerifyPage />} />
             <Route path={ROUTES.REGISTRATION_POPUP} element={<RegistrationPopUp />} />
             <Route path={ROUTES.REVIEW_MODAL} element={<ReviewModalOnly />} />

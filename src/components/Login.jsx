@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from "axios";
+
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -34,13 +36,54 @@ const Login = () => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log('Form submitted:', formData);
-    }
-    window.location.replace("/dashboard-ai")
+
+    if (!validateForm()) return;
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
+        email: formData.email,
+        password: formData.password
+      });
+
+      // Save token + user info
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      alert("Login successful!");
+
+      // Redirect
+      window.location.replace("/dashboard-ai");
+
+    } catch (error) {
+        console.error("Login error:", error);
+
+        // Reset errors first
+        setErrors({ email: "", password: "" });
+
+        if (error.response?.data?.error?.includes("Email not found")) {
+          setErrors((prev) => ({
+            ...prev,
+            email: "Email does not exist.",
+          }));
+        }
+
+        else if (error.response?.data?.error?.includes("Invalid credentials") ||
+                error.response?.data?.error?.includes("Wrong password")) 
+        {
+          setErrors((prev) => ({
+            ...prev,
+            password: "Incorrect password.",
+          }));
+        }
+
+        else {
+          alert("Login failed. Try again.");
+        }
+      }
   };
+
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;

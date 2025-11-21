@@ -1,30 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 
 // Converted Page Component
 function ClientRepairDone() {
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const profileButtonRef = useRef(null);
-  const profileDropdownRef = useRef(null);
-
-  // Effect to handle clicking outside the dropdown
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        isProfileOpen &&
-        profileButtonRef.current &&
-        !profileButtonRef.current.contains(event.target) &&
-        profileDropdownRef.current &&
-        !profileDropdownRef.current.contains(event.target)
-      ) {
-        setIsProfileOpen(false);
-      }
-    }
-
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [isProfileOpen]);
 
   return (
     <div className="bg-gray-50 text-gray-900 flex flex-col min-h-screen" style={{ fontFamily: "'Inter', sans-serif" }}>
