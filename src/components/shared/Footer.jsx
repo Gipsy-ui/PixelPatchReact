@@ -39,8 +39,6 @@ const Footer = () => {
             <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase">Connect With Us</h3>
             <ul className="mt-4 space-y-3">
               <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Facebook</a></li>
-              <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Instagram</a></li>
-              <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">X (Twitter)</a></li>
             </ul>
           </div>
         </div>
