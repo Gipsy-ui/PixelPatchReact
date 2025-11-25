@@ -7,6 +7,10 @@ const RejectionModal = ({ isOpen, onClose, requestId }) => {
   const [rejectionReason, setRejectionReason] = useState('');
   const navigate = useNavigate();
 
+  const handleSave = () => {
+    navigate("/business/repairs");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -30,7 +34,7 @@ const RejectionModal = ({ isOpen, onClose, requestId }) => {
           <h2 className="text-xl font-semibold text-gray-900">Reason for rejection</h2>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="bg-white text-gray-900 hover:text-gray-600"
           >
             <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -49,7 +53,7 @@ const RejectionModal = ({ isOpen, onClose, requestId }) => {
                 name="rejection_reason"
                 rows="6"
                 className="mt-1 block w-full rounded-lg border-gray-200 bg-gray-100 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-4"
-                placeholder="We're sorry..."
+                placeholder="We're sorry... Gomenazai..."
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 required
@@ -59,6 +63,7 @@ const RejectionModal = ({ isOpen, onClose, requestId }) => {
           
           <div className="flex justify-end p-5 pt-0">
             <button
+            onClick={handleSave}
               type="submit"
               className="rounded-lg border border-transparent bg-red-600 py-2 px-6 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             >

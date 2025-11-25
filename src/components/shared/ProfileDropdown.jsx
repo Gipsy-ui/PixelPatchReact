@@ -42,7 +42,7 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
           </div>
           {/* Links Section 2 */}
           <div className="py-1 border-t border-gray-200">
-            <button onClick={() => handleNavigation(ROUTES.BUSINESS)} className="bg-white C block w-full text-left px-4 py-3 text-sm text-blue-600 hover:bg-gray-100">Switch to Business</button>
+            <button onClick={() => handleNavigation(ROUTES.BUSINESS.DASHBOARD)} className="bg-white C block w-full text-left px-4 py-3 text-sm text-blue-600 hover:bg-gray-100">Switch to Business</button>
           </div>
           {/* Links Section 3 */}
           <div className="py-1 border-t border-gray-200">

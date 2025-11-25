@@ -139,7 +139,7 @@ export default function RepairRequestModal({ onClose, shop }) {
 
           {/* Action Buttons */}
           <div className="bg-white mt-10 flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-200">
-            <button onClick={onClose} className="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+            <button onClick={onClose} className="bg-white px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
               Cancel
             </button>
             <button className="px-6 py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors shadow-sm">

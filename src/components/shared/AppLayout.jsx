@@ -1,10 +1,7 @@
 import { Link, Outlet } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
-
-// Icons (Lucide)
 import { Bell, MessageCircle, Menu } from "lucide-react";
-
 import TopNavigation from './TopNavigation';
 import UserAvatar from './UserAvatar';
 import ProfileDropdown from './ProfileDropdown';
@@ -48,12 +45,12 @@ const AppLayout = ({ children }) => {
               <div className="ml-4 flex items-center space-x-4">
 
                 {/* NOTIFICATIONS */}
-                <button 
+                {/* <button 
                   className="bg-white text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors"
                   aria-label="Notifications"
                 >
                   <Bell className="w-6 h-6" />
-                </button>
+                </button> */}
 
                 {/* CHAT */}
                 <button 

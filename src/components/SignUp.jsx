@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 
 const SignUp = () => {
+    const navigate = useNavigate();
 
     // OTP related state (place with other useState() calls)
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -239,7 +240,7 @@ const SignUp = () => {
             console.log(response.data);
 
             alert("Account created successfully!");
-            window.location.replace("/login");
+            navigate('/login');
 
         } catch (error) {
             console.error("Registration error:", error);

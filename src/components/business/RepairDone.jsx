@@ -1,14 +1,15 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const RepairDone = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   return (
     <main className="flex-1 overflow-y-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Request #{id || '001'}</h1>
-        <span className="text-sm font-medium bg-green-100 text-green-800 px-3 py-1 rounded-full">Done</span>
+        <span className="text-sm font-medium bg-blue-700 text-white px-3 py-1 rounded-full">Done</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -140,15 +141,15 @@ const RepairDone = () => {
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-3">
-          <button
+          {/* <button
             type="button"
             className="rounded-lg border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Request Extension
-          </button>
+          </button> */}
           <button
             type="button"
-            onClick={() => window.location.href = `/business/repairs/${id || '001'}/completed`}
+            onClick={() => navigate(`/business/repairs/${id || '001'}/completed`)}
             className="rounded-lg border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Confirm Drop-off

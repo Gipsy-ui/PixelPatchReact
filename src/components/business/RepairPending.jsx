@@ -1,125 +1,137 @@
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { ROUTES } from '../../constants/routes';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const mockRequests = {
-  '1': {
-    id: 1,
-    device: 'Samsung S25',
-    pickupAddress: '112, Normal Road, Baliwasan Zamboanga City',
-    deviceType: 'Smartphone',
-    preferredTime: 'Oct 25, 2025',
-    repairType: 'Screen Replacement',
-    serviceType: 'Pickup',
-    description: "The screen of the phone is broken and it is not turning on.",
-    images: [
-      'https://placehold.co/150x150/e0f2fe/3b82f6?text=Phone+Front',
-      'https://placehold.co/150x150/e0f2fe/3b82f6?text=Phone+Back',
-      'https://placehold.co/150x150/e0f2fe/3b82f6?text=Phone+Side'
-    ]
-  }
-};
+// This component is rendered inside BusinessLayout, which already provides sidebar & header.
+export default function RepairPending() {
+  const navigate = useNavigate();
+  const repairId = "001"; // You can replace this dynamically if coming from props or state
 
-const RepairPending = () => {
-  const { id } = useParams();
-  const request = mockRequests[id] || mockRequests['1'];
+  const handleReject = () => {
+    navigate(`/business/repairs/${repairId}/reject`);
+  };
+
+  const handleConfirmPickup = () => {
+    // Navigate to awaiting assessment view
+    navigate('/business/repairs/awaiting-assessment'); 
+  };
 
   return (
-    <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-      <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-lg flex justify-between items-center mb-6">
-        <p className="font-medium">The shop is currently reviewing your request.</p>
-        <span className="text-xs font-medium bg-yellow-200 text-yellow-900 px-2.5 py-0.5 rounded-full">Pending</span>
-      </div>
+    <div className="p-8 flex-grow overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden max-w-4xl mx-auto">
 
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <div className="relative pb-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Request Information</h2>
-          <div className="absolute top-0 right-0 text-right">
-            <p className="text-xs text-gray-500">Estimates Reply</p>
-            <p className="text-sm font-semibold text-gray-900">3-4 Days</p>
-          </div>
+        {/* Header */}
+        <div className="px-8 py-6 border-b border-gray-200 flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-900">Request #{repairId}</h1>
+          <span className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium border border-orange-200">
+            Pending
+          </span>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 text-sm">
-            <div>
-              <span className="text-gray-500">Device</span>
-              <p className="font-medium text-gray-800">{request.device}</p>
+        {/* Request Information */}
+        <div className="p-8 border-b border-gray-200 bg-gray-50/50">
+          <h2 className="text-lg font-semibold text-gray-900 mb-6">Request Information</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Left Column */}
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium text-gray-900">Samsung S25</h3>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  Device Type
+                </p>
+                <p className="text-sm text-gray-900">Smartphone</p>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  Repair Type
+                </p>
+                <p className="text-sm text-gray-900">Screen Replacement</p>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  Service Type
+                </p>
+                <p className="text-sm text-gray-900">Pickup</p>
+              </div>
             </div>
-            <div>
-              <span className="text-gray-500">Pickup Address</span>
-              <p className="font-medium text-gray-800">{request.pickupAddress}</p>
+
+            {/* Right Column */}
+            <div className="space-y-6">
+              <div>
+                <div className="h-7"></div>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  Pickup Address
+                </p>
+                <p className="text-sm text-gray-900">
+                  112, Normal Road, Baliwasan Zamboanga City
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  Preferred Time
+                </p>
+                <p className="text-sm text-gray-900">Oct 25, 2025</p>
+              </div>
             </div>
-            <div>
-              <span className="text-gray-500">Device Type</span>
-              <p className="font-medium text-gray-800">{request.deviceType}</p>
-            </div>
-            <div>
-              <span className="text-gray-500">Preferred Time</span>
-              <p className="font-medium text-gray-800">{request.preferredTime}</p>
-            </div>
-            <div>
-              <span className="text-gray-500">Repair Type</span>
-              <p className="font-medium text-gray-800">{request.repairType}</p>
-            </div>
-            <div>
-              <span className="text-gray-500">Service Type</span>
-              <p className="font-medium text-gray-800">{request.serviceType}</p>
-            </div>
+
+            {/* Full Width Description */}
             <div className="md:col-span-2">
-              <span className="text-gray-500">Description</span>
-              <p className="font-medium text-gray-800">{request.description}</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                Description
+              </p>
+              <p className="text-sm text-gray-900">
+                The screen of the phone is broken and it is not turning on.
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Shop Information</h2>
-            <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-3">
-              <h3 className="font-semibold text-gray-900">TechFix Pro</h3>
-              <div className="text-sm">
-                <span className="text-gray-500">Address</span>
-                <p className="font-medium text-gray-800">5433 Dona Benita Drive, Canelar Zamboanga City</p>
-              </div>
-              <div className="text-sm">
-                <span className="text-gray-500">Email</span>
-                <p className="font-medium text-gray-800">techfix@gmail.com</p>
-              </div>
-              <div className="text-sm">
-                <span className="text-gray-500">Phone</span>
-                <p className="font-medium text-gray-800">998-505-177</p>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Reference Images</h2>
-            <div className="flex flex-wrap gap-4">
-              {request.images.map((src, i) => (
-                <img key={i} src={src} alt={`ref-${i}`} className="w-24 h-24 rounded-lg object-contain border border-gray-200 bg-white p-1" />
-              ))}
-            </div>
+        {/* Reference Images */}
+        <div className="p-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Reference Images
+          </h2>
+          <div className="flex gap-4">
+            <img
+              src="https://placehold.co/100x150/e0f2fe/3b82f6?text=Front"
+              alt="Phone Front"
+              className="w-24 h-32 object-contain border border-gray-200 bg-white rounded-lg p-1"
+            />
+            <img
+              src="https://placehold.co/100x150/e0f2fe/3b82f6?text=Back"
+              alt="Phone Back"
+              className="w-24 h-32 object-contain border border-gray-200 bg-white rounded-lg p-1"
+            />
           </div>
         </div>
-      </div>
 
-      <div className="mt-6 bg-blue-100 p-4 rounded-lg flex items-center justify-between">
-        <p className="text-sm text-blue-800">
-          <span className="font-semibold">Support Center:</span>
-          Having issues with your request? <a href="#" className="font-medium underline hover:text-blue-600">Contact Support</a>
-        </p>
-      </div>
+        {/* Footer Actions */}
+        <div className="px-8 py-6 bg-white border-t border-gray-200 flex justify-end gap-4">
+          <button
+            onClick={handleReject}
+            className="px-6 py-2.5 rounded-lg bg-red-600 text-white font-medium text-sm hover:bg-red-700 transition-colors shadow-sm"
+          >
+            Reject
+          </button>
 
-      <div className="mt-8 flex justify-end">
-        <button className="rounded-lg border border-transparent bg-red-600 py-2 px-5 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-          Cancel Request
-        </button>
-      </div>
+          <button
+            onClick={handleConfirmPickup}
+            className="px-6 py-2.5 rounded-lg bg-blue-600 text-white font-medium text-sm hover:bg-blue-700 transition-colors shadow-sm"
+          >
+            Confirm Pickup
+          </button>
+        </div>
 
-      <div className="mt-6">
-        <Link to={ROUTES.BUSINESS.REPAIRS} className="inline-block mt-6 text-sm text-blue-600 hover:underline">Back to repairs</Link>
       </div>
-    </main>
+    </div>
   );
-};
-
-export default RepairPending;
+}

@@ -26,7 +26,7 @@ const RequestExtensionModal = ({ isOpen, onClose, requestId }) => {
       <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-auto overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">Request for Extension</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <button onClick={onClose} className="bg-white text-gray-400 hover:text-gray-600">
             <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>

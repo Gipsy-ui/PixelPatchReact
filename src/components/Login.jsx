@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 
@@ -16,6 +16,7 @@ const Login = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const validateForm = () => {
     let isValid = true;
@@ -53,8 +54,8 @@ const Login = () => {
 
       alert("Login successful!");
 
-      // Redirect
-      window.location.replace("/dashboard-ai");
+  // Redirect using SPA navigation
+  navigate('/dashboard-ai');
 
     } catch (error) {
         console.error("Login error:", error);
@@ -222,7 +223,6 @@ const Login = () => {
               type="submit"
               className="bg-sky-500 hover:bg-sky-600 text-white w-full py-3 rounded-lg transition font-semibold shadow-md hover:shadow-lg"
             >
-              <link ></link>
               Log In
             </button>
 
