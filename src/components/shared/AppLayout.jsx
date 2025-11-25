@@ -1,18 +1,33 @@
-import { Link, Outlet } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { useState, useEffect, useRef } from 'react';
-
-// Icons (Lucide)
+import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
+import { useState, useEffect, useRef } from "react";
 import { Bell, MessageCircle, Menu } from "lucide-react";
 
-import TopNavigation from './TopNavigation';
-import UserAvatar from './UserAvatar';
-import ProfileDropdown from './ProfileDropdown';
-import Footer from './Footer';
+import TopNavigation from "./TopNavigation";
+import UserAvatar from "./UserAvatar";
+import ProfileDropdown from "./ProfileDropdown";
+import Footer from "./Footer";
+
+import { ROUTES } from "../../constants/routes"; 
 
 const AppLayout = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+
+  const handleLogin = () => navigate(ROUTES.LOGIN);
+  const handleSignUp = () => navigate(ROUTES.SIGNUP);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  // Accept token from localStorage or sessionStorage
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  const isLoggedIn = Boolean(token);
+
+  // Determine if footer should be hidden
+  const hideFooterRoutes = ["/messages", "/ai-assistant", "/"];
+  const shouldHideFooter = hideFooterRoutes.includes(location.pathname);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -21,64 +36,66 @@ const AppLayout = ({ children }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
-    <div className="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
-      
+    <div
+      className={`bg-gray-50 text-gray-900 flex flex-col 
+      ${location.pathname === "/messages" || location.pathname === "/ai-assistant"
+        ? "h-screen"      // chat pages
+        : "min-h-screen"  // normal pages
+      }`}
+    >
+
+
       {/* HEADER */}
-      <header className="border-b border-gray-200 bg-white w-full flex-shrink-0">
+      <header className="border-b border-gray-200 bg-white w-full flex-shrink-0 h-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="bg-white flex items-center justify-between h-20">
-            
-            {/* LOGO */}
-            <div className="flex-shrink-0">
-              <Link to="/" className="text-2xl font-extrabold text-blue-600">
-                PixelPatch
-              </Link>
-            </div>
+          <nav className="flex items-center justify-between h-20">
 
-            {/* TOP NAV */}
-            <TopNavigation />
+            <Link to="/" className="text-2xl font-extrabold text-blue-600">
+              PixelPatch
+            </Link>
 
-            {/* RIGHT ACTIONS */}
-            <div className="hidden md:block">
-              <div className="ml-4 flex items-center space-x-4">
+            {isLoggedIn && <TopNavigation />}
 
-                {/* NOTIFICATIONS */}
-                <button 
-                  className="bg-white text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors"
-                  aria-label="Notifications"
-                >
-                  <Bell className="w-6 h-6" />
-                </button>
+            {isLoggedIn ? (
+              <div className="hidden md:block">
+                <div className="ml-4 flex items-center space-x-4">
 
-                {/* CHAT */}
-                <button 
-                  className="bg-white text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors"
-                  aria-label="Chat"
-                >
-                  <MessageCircle className="w-6 h-6" />
-                </button>
+                  <button className="bg-white text-gray-500 hover:text-blue-600 rounded-full p-2">
+                    <Bell className="w-6 h-6" />
+                  </button>
 
-                {/* PROFILE DROPDOWN */}
-                <div ref={dropdownRef}>
-                  <UserAvatar
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    showDropdown={isDropdownOpen}
-                    dropdownContent={<ProfileDropdown isOpen={isDropdownOpen} />}
-                  />
+                  <button className="bg-white text-gray-500 hover:text-blue-600 rounded-full p-2">
+                    <MessageCircle className="w-6 h-6" />
+                  </button>
+
+                  <div ref={dropdownRef}>
+                    <UserAvatar
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      showDropdown={isDropdownOpen}
+                      dropdownContent={<ProfileDropdown isOpen={isDropdownOpen} />}
+                    />
+                  </div>
+
                 </div>
-
               </div>
-            </div>
+            ) : (
+              <div className="hidden md:flex items-center space-x-4">
+                <button onClick={handleLogin} className="bg-white text-blue-600 px-4 py-2 border border-gray-400 rounded-lg">
+                  Login
+                </button>
+                <button onClick={handleSignUp} className="bg-blue-600 text-white px-5 py-2 rounded-lg">
+                  Sign Up
+                </button>
+              </div>
+            )}
 
-            {/* MOBILE MENU BUTTON */}
             <div className="md:hidden">
-              <button className="bg-white p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100">
-                <span className="sr-only">Open menu</span>
+              <button className="bg-white p-2 rounded-md text-gray-500 hover:bg-gray-900 hover:bg-gray-100">
                 <Menu className="w-6 h-6" />
               </button>
             </div>
@@ -87,19 +104,17 @@ const AppLayout = ({ children }) => {
         </div>
       </header>
 
-      {/* MAIN CONTENT */}
-      <main className="flex-grow">
-        {children ?? <Outlet />}
-      </main>
+      <main className="flex-grow flex flex-col h-full min-h-0">{children ?? <Outlet />}</main>
 
-      {/* FOOTER */}
-      <Footer />
+      {/* FOOTER (hidden for AI chat page) */}
+      {!shouldHideFooter && <Footer />}
+
     </div>
   );
 };
 
 AppLayout.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export default AppLayout;

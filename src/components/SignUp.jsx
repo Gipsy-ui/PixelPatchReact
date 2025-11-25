@@ -273,7 +273,7 @@ const SignUp = () => {
             <div className="bg-white shadow-lg rounded-xl flex w-full max-w-5xl overflow-hidden">
                 <div className="w-full lg:w-3/5 p-8 sm:p-12">
                 <Link 
-                    to="/dashboard-ai-before" 
+                    to="/" 
                     className="text-sm text-gray-600 hover:text-gray-900 flex items-center mb-6"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

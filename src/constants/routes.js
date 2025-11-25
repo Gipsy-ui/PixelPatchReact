@@ -1,7 +1,6 @@
 export const ROUTES = {
   HOME: '/',
-  DASHBOARD_AI_BEFORE:'/dashboard-ai-before',
-  DASHBOARD_AI: '/dashboard-ai',
+  AI: '/ai',
   MESSAGES: '/messages',
   SERVICES: '/services',
   PARTNER: '/partner',
@@ -72,7 +71,7 @@ export const ROUTES = {
 
 // Navbar paths 
 export const NAV_ITEMS = [
-  { id: 'home', path: ROUTES.DASHBOARD_AI, label: 'Home', exact: true },
+  { id: 'home', path: ROUTES.HOME, label: 'Home', exact: true },
   { id: 'services', path: ROUTES.SERVICES, label: 'Services' },
   { id: 'partner', path: ROUTES.PARTNER, label: 'Become a Partner' }
 ];

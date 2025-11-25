@@ -1,9 +1,55 @@
-import { useState } from 'react';
+import { useState, useEffect  } from 'react';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 
 
+
 const Login = () => {
+
+  useEffect(() => {
+    /* global google */
+    if (window.google) {
+      google.accounts.id.initialize({
+        client_id: "336535186008-435fgksv3m1oj49cv43inibs2eajdg3p.apps.googleusercontent.com",
+        callback: handleGoogleLogin,
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById("googleLogin"),
+        { theme: "outline", size: "large", width: "100%" }
+      );
+    }
+  }, []);
+
+  const handleGoogleLogin = () => {
+    /* Google popup */
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: async (response) => {
+        try {
+          const res = await axios.post("http://localhost:5000/api/auth/google-login", {
+            credential: response.credential,
+          });
+
+          // Save token + user
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+
+          window.location.replace("/dashboard-ai");
+
+        } catch (err) {
+          console.error(err);
+          alert("Google Login failed");
+        }
+      },
+    });
+
+    google.accounts.id.prompt(); // Google popup
+  };
+
+
+
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -47,42 +93,38 @@ const Login = () => {
         password: formData.password
       });
 
-      // Save token + user info
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      // Save token + user info depending on Remember Me
+      if (formData.rememberMe) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+      } else {
+        sessionStorage.setItem("token", response.data.token);
+        sessionStorage.setItem("user", JSON.stringify(response.data.user));
+      }
 
-      alert("Login successful!");
-
-      // Redirect
-      window.location.replace("/dashboard-ai");
+      // Silent redirect (no alert)
+      window.location.replace("/");
 
     } catch (error) {
-        console.error("Login error:", error);
+      console.error("Login error:", error);
 
-        // Reset errors first
-        setErrors({ email: "", password: "" });
+      // Clear old errors
+      setErrors({ email: "", password: "" });
 
-        if (error.response?.data?.error?.includes("Email not found")) {
-          setErrors((prev) => ({
-            ...prev,
-            email: "Email does not exist.",
-          }));
-        }
+      const message = error.response?.data?.error || "";
 
-        else if (error.response?.data?.error?.includes("Invalid credentials") ||
-                error.response?.data?.error?.includes("Wrong password")) 
-        {
-          setErrors((prev) => ({
-            ...prev,
-            password: "Incorrect password.",
-          }));
-        }
-
-        else {
-          alert("Login failed. Try again.");
-        }
+      if (message.includes("Email not found")) {
+        setErrors((prev) => ({ ...prev, email: "Email does not exist." }));
+      } 
+      else if (message.includes("Invalid credentials") || message.includes("Wrong password")) {
+        setErrors((prev) => ({ ...prev, password: "Incorrect password." }));
+      } 
+      else {
+        setErrors((prev) => ({ ...prev, password: "Login failed. Try again." }));
       }
+    }
   };
+
 
 
   const handleInputChange = (e) => {
@@ -236,6 +278,8 @@ const Login = () => {
             {/* Google Login */}
             <button
               type="button"
+              id="googleLogin"
+              onClick={handleGoogleLogin}
               className="font-semibold border border-gray-300 flex items-center justify-center w-full py-3 rounded-lg hover:bg-gray-100 transition-all duration-200 shadow-sm hover:shadow-md"
             >
               <img

@@ -1,10 +1,13 @@
 import db from "../config/db.js";
 import jwt from "jsonwebtoken";
 import { hashPassword, comparePassword } from "../utils/hash.js";
+import { OAuth2Client } from "google-auth-library";
 
-/* ============================
-        REGISTER
-=============================== */
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+/* =====================================
+                REGISTER
+====================================== */
 export const register = async (req, res) => {
   try {
     const {
@@ -19,7 +22,6 @@ export const register = async (req, res) => {
       photo_url
     } = req.body;
 
-    // hash password
     const hashedPassword = await hashPassword(password);
 
     const sql = `
@@ -44,16 +46,33 @@ export const register = async (req, res) => {
       (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
 
-        res.json({ message: "Registration successful", user_id: result.insertId });
+        res.json({ 
+          message: "Registration successful", 
+          user_id: result.insertId 
+        });
       }
     );
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
-/* ============================
-        LOGIN
-=============================== */
+
+/* =====================================
+                  LOGIN
+====================================== */
+
+export const generateTestHash = async (req, res) => {
+  try {
+    const bcrypt = await import("bcryptjs");
+    const hash = await bcrypt.hash("password123", 10);
+
+    res.json({ hash });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Hash generation failed" });
+  }
+};
+
 export const login = (req, res) => {
   const { email, password } = req.body;
 
@@ -68,12 +87,10 @@ export const login = (req, res) => {
 
       const user = result[0];
 
-      // compare password
       const isMatch = await comparePassword(password, user.password_hash);
       if (!isMatch)
         return res.status(400).json({ error: "Invalid credentials" });
 
-      // create token
       const token = jwt.sign(
         { id: user.id, role_id: user.role_id },
         process.env.JWT_SECRET,
@@ -94,4 +111,79 @@ export const login = (req, res) => {
       });
     }
   );
+};
+
+
+/* =====================================
+             GOOGLE LOGIN
+====================================== */
+export const googleLogin = async (req, res) => {
+  const { credential } = req.body;
+
+  try {
+    // Validate Google Token
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+    const email = payload.email;
+
+    // Check if user already exists
+    db.query("SELECT * FROM users WHERE email = ?", [email], async (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      let user = result[0];
+
+      if (!user) {
+        // Auto-create account for Google login
+        const insertSql = `
+          INSERT INTO users (email, first_name, last_name, photo_url, role_id)
+          VALUES (?, ?, ?, ?, 1)
+        `;
+
+        const values = [
+          email,
+          payload.given_name || "",
+          payload.family_name || "",
+          payload.picture || null
+        ];
+
+        const insertResult = await new Promise((resolve, reject) => {
+          db.query(insertSql, values, (err2, result2) => {
+            if (err2) return reject(err2);
+            resolve(result2);
+          });
+        });
+
+        // Attach created user info
+        user = {
+          id: insertResult.insertId,
+          email,
+          first_name: payload.given_name,
+          last_name: payload.family_name,
+          photo_url: payload.picture,
+          role_id: 1
+        };
+      }
+
+      // Generate token
+      const token = jwt.sign(
+        { id: user.id, role_id: user.role_id },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      res.json({
+        message: "Google Login successful",
+        token,
+        user,
+      });
+    });
+
+  } catch (error) {
+    console.error("GOOGLE LOGIN ERROR:", error);
+    res.status(400).json({ error: "Invalid Google token" });
+  }
 };
