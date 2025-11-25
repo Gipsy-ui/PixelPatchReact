@@ -1,6 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
+import axios from "axios";
+
 
 // Main App component for preview
 export default function App() {
@@ -81,122 +83,171 @@ function BusinessSignUpPageThree() {
     navigate(ROUTES.BUSINESS_SIGNUP.STEP2);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    navigate(ROUTES.BUSINESS_SIGNUP.STEP4);
+
+    const form = event.target;
+
+    // 1️⃣ Load previous steps
+    const savedData = JSON.parse(localStorage.getItem("businessSignup")) || {};
+
+    // 2️⃣ Extract payment info
+    const paymentData = {
+      payment_method: form.payment_method.value,
+      account_name: form.account_name.value,
+      account_number: form.account_number.value,
+      tin: form.tin.value || null,
+      terms: form.terms.checked,
+      privacy: form.privacy.checked,
+    };
+
+    // 3️⃣ Merge final data
+    const finalData = {
+      ...savedData,
+      payment: paymentData,
+    };
+
+    console.log("FINAL DATA TO SAVE:", finalData);
+
+    try {
+      // 4️⃣ Send API request to backend
+      const response = await axios.post(
+        "http://localhost:5000/api/business-register",
+        finalData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") || sessionStorage.getItem("token")}`
+          }
+        }
+      );
+
+
+      console.log("BACKEND RESPONSE:", response.data);
+
+      // 5️⃣ Navigate to review screen
+      navigate(ROUTES.BUSINESS_SIGNUP.STEP4);
+
+    } catch (err) {
+      console.error("REGISTRATION ERROR:", err);
+      alert("Failed to register. Check backend.");
+    }
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-8 sm:p-12 w-full max-w-2xl mx-auto">
       <Stepper currentStep={4} />
-      
+
       <div className="max-w-md mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Payment Details</h1>
-        
+        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+          Payment Details
+        </h1>
+
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Preferred Payment Method */}
+
+          {/* Payment Method */}
           <div>
-            <label htmlFor="payment_method" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Preferred Payment Method
             </label>
             <select
               id="payment_method"
               name="payment_method"
-              className="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 text-sm focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 text-sm"
               defaultValue=""
+              required
             >
               <option value="" disabled>Select Payment Method</option>
               <option value="bank">Bank Transfer</option>
-              <option value="e-wallet">E-Wallet (GCash, Maya)</option>
+              <option value="gcash">GCash</option>
+              <option value="maya">Maya</option>
             </select>
           </div>
-          
+
           {/* Account Name */}
           <div>
-            <label htmlFor="account_name" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Account Name
             </label>
             <input
               type="text"
               name="account_name"
-              id="account_name"
-              className="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 text-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Enter account name"
+              className="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 text-sm"
+              required
             />
           </div>
-          
+
           {/* Account Number */}
           <div>
-            <label htmlFor="account_number" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Account Number
             </label>
             <input
               type="text"
               name="account_number"
-              id="account_number"
-              className="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 text-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Enter account number"
+              className="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 text-sm"
+              required
             />
           </div>
-          
+
           {/* TIN (optional) */}
           <div>
-            <label htmlFor="tin" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               TIN (optional)
             </label>
             <input
               type="text"
               name="tin"
-              id="tin"
-              className="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 text-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Enter your TIN"
+              className="block w-full rounded-lg border-gray-300 bg-gray-100 p-3 text-sm"
             />
           </div>
-          
-          {/* Checkboxes */}
+
+          {/* Terms */}
           <div className="space-y-4 pt-4">
             <div className="flex items-start">
               <input
-                id="terms"
-                name="terms"
                 type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mt-0.5"
+                name="terms"
+                className="h-4 w-4 text-blue-600 mt-0.5"
+                required
               />
-              <label htmlFor="terms" className="ml-3 block text-sm text-gray-600">
-                I confirm that I have read and agree to the <a href="#" className="font-medium text-blue-600 hover:underline">Terms and Conditions</a>.
+              <label className="ml-3 text-sm text-gray-600">
+                I agree to the Terms & Conditions.
               </label>
             </div>
+
             <div className="flex items-start">
               <input
-                id="privacy"
-                name="privacy"
                 type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 mt-0.5"
+                name="privacy"
+                className="h-4 w-4 text-blue-600 mt-0.5"
+                required
               />
-              <label htmlFor="privacy" className="ml-3 block text-sm text-gray-600">
-                I consent to the collection and use of my data as outlined in the <a href="#" className="font-medium text-blue-600 hover:underline">Privacy Policy</a>.
+              <label className="ml-3 text-sm text-gray-600">
+                I accept the Privacy Policy.
               </label>
             </div>
           </div>
-          
-          {/* Footer Buttons */}
-          <div className="mt-8 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-end gap-4">
+
+          {/* Buttons */}
+          <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-4">
             <button
               type="button"
               onClick={handleBack}
-              className="flex-1 md:flex-none rounded-lg border border-gray-300 bg-white px-6 py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
+              className="px-6 py-3 rounded-lg bg-white border border-gray-300"
             >
               Back
             </button>
             <button
               type="submit"
-              className="flex-1 md:flex-none rounded-lg border border-transparent bg-blue-600 px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
+              className="px-6 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
             >
               Continue
             </button>
           </div>
+
         </form>
       </div>
     </div>
   );
 }
+

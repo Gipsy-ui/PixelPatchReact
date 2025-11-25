@@ -97,10 +97,18 @@ const Login = () => {
       if (formData.rememberMe) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("user");
+
       } else {
         sessionStorage.setItem("token", response.data.token);
         sessionStorage.setItem("user", JSON.stringify(response.data.user));
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       }
+
 
       // Silent redirect (no alert)
       window.location.replace("/");

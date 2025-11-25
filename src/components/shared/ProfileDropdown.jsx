@@ -1,66 +1,82 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+import { ROUTES } from "../../constants/routes";
 
 const ProfileDropdown = ({ isOpen }) => {
   const navigate = useNavigate();
-
   if (!isOpen) return null;
 
-  const handleLogout = () => {
-    // Clear all auth data
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("user");
-    localStorage.removeItem("hasStartedChat");
-    sessionStorage.removeItem("hasStartedChat");
+  const user =
+    JSON.parse(localStorage.getItem("user")) ||
+    JSON.parse(sessionStorage.getItem("user"));
 
-    // Redirect to home
+  const isBusiness = user?.role === "business";
+
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
     navigate("/");
-    window.location.reload(); // to refresh header state
+    window.location.reload();
   };
 
   return (
-    <div className="absolute right-0 mt-2 w-64 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-      <div className="py-1" role="none">
+    <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 z-50">
 
-        {/* User Info */}
-        <div className="flex items-center px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-t-lg">
-          <img className="h-10 w-10 rounded-full" src="https://placehold.co/40x40/dbeafe/1e40af?text=JD&font=inter" alt="User Avatar" />
-          <div className="ml-3">
-            <p className="text-sm font-semibold text-gray-900">John Doe</p>
-            <p className="text-sm text-gray-500">johndoe@gmail.com</p>
-          </div>
+      {/* USER INFO */}
+      <div className="flex items-center px-4 py-3 border-b bg-gray-50">
+        <div className="h-10 w-10 rounded-full bg-blue-200 text-blue-700 flex items-center justify-center font-bold">
+          {user?.first_name?.[0]}
+          {user?.last_name?.[0]}
         </div>
 
-        {/* Links Section 1 */}
-        <div className="py-1">
-          <Link to="/profile" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Profile</Link>
-          <Link to="/repairs" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Repairs</Link>
-          <Link to="/devices" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Devices</Link>
-          <Link to="/ai-assistant" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">AI Assistant</Link>
+        <div className="ml-3">
+          <p className="text-sm font-semibold">
+            {user?.first_name} {user?.last_name}
+          </p>
+          <p className="text-sm text-gray-500">{user?.email}</p>
         </div>
+      </div>
 
-        {/* Links Section 2 */}
-        <div className="py-1 border-t border-gray-200">
-          <Link to="/business" className="block px-4 py-3 text-sm text-blue-600 hover:bg-gray-100">Switch to Business</Link>
-        </div>
+      {/* LINKS */}
+      <div className="py-1">
+        <Link to={ROUTES.PROFILE} className="block px-4 py-3 hover:bg-gray-100">Profile</Link>
+        <Link to={ROUTES.REPAIRS} className="block px-4 py-3 hover:bg-gray-100">Repairs</Link>
+        <Link to={ROUTES.DEVICES} className="block px-4 py-3 hover:bg-gray-100">Devices</Link>
+        <Link to="/ai-assistant" className="block px-4 py-3 hover:bg-gray-100">AI Assistant</Link>
+      </div>
 
-        {/* Links Section 3 */}
-        <div className="py-1 border-t border-gray-200">
-          <Link to="/settings" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
-          <Link to="/help" className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100">Help</Link>
-        </div>
-
-        {/* LOG OUT */}
-        <div className="py-1 border-t border-gray-200">
-          <button
-            onClick={handleLogout}
-            className="block px-4 py-3 text-sm text-red-600 bg-white hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-200"
+      {/* BUSINESS REGISTRATION */}
+      <div className="border-t py-1">
+        {!isBusiness ? (
+          <Link
+            to={ROUTES.BUSINESS_SIGNUP.STEP1}
+            className="block px-4 py-3 text-blue-600 hover:bg-gray-100"
           >
-            Log Out
-          </button>
-        </div>
+            Register as Business
+          </Link>
+        ) : (
+          <Link
+            to={ROUTES.BUSINESS.DASHBOARD}
+            className="block px-4 py-3 text-blue-600 hover:bg-gray-100"
+          >
+            Switch to Business
+          </Link>
+        )}
+      </div>
 
+      {/* SETTINGS */}
+      <div className="border-t py-1">
+        <Link to={ROUTES.SETTINGS} className="block px-4 py-3 hover:bg-gray-100">Settings</Link>
+        <Link to={ROUTES.HELP} className="block px-4 py-3 hover:bg-gray-100">Help</Link>
+      </div>
+
+      {/* LOG OUT */}
+      <div className="border-t py-1">
+        <button
+          onClick={handleLogout}
+          className=" bg-white w-full text-left px-4 py-3 text-red-600 hover:bg-gray-100"
+        >
+          Log Out
+        </button>
       </div>
     </div>
   );

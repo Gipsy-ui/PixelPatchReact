@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 
 export default function ClientMessages() {
   const [messages, setMessages] = useState([]);
@@ -176,10 +178,13 @@ export default function ClientMessages() {
                     <p className="text-xs text-gray-500 mt-1">
                       📍 {shop.address}
                     </p>
-
-                    <button className="mt-3 w-full bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 rounded-lg">
+                    <Link
+                      to={`/shops/${shop.id}`}
+                      state={{ shop }}   // <-- passes full shop object
+                      className="mt-3 block w-full bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 rounded-lg text-center"
+                    >
                       View Shop
-                    </button>
+                    </Link>
                   </div>
                 ))}
               </div>

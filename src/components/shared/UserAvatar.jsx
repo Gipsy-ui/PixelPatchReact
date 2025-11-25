@@ -1,20 +1,34 @@
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const UserAvatar = ({ onClick, showDropdown, dropdownContent }) => {
+  const user =
+    JSON.parse(localStorage.getItem("user")) ||
+    JSON.parse(sessionStorage.getItem("user"));
+
+  const firstName = user?.first_name || "";
+  const lastName = user?.last_name || "";
+
   return (
     <div className="relative">
       <button
         onClick={onClick}
-        className="bg-white flex items-center justify-center h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 hover:border-blue-500 transition-colors"
+        className="
+          flex items-center justify-center
+          h-10 w-10 rounded-full overflow-hidden
+          border-2 border-gray-200 hover:border-blue-500
+          bg-white dark:bg-white dark:border-gray-200
+          transition-colors
+        "
       >
         <span className="sr-only">Open user menu</span>
-        <img 
-          className="h-full w-full object-cover" 
-          src="https://placehold.co/40x40/e0f2fe/3b82f6?text=U&font=inter" 
-          alt="User avatar" 
+
+        <img
+          className="h-full w-full object-cover rounded-full"
+          src={`https://ui-avatars.com/api/?name=${firstName}+${lastName}&background=dbeafe&color=1e40af`}
+          alt="User Avatar"
         />
       </button>
+
       {showDropdown && dropdownContent}
     </div>
   );
@@ -23,12 +37,12 @@ const UserAvatar = ({ onClick, showDropdown, dropdownContent }) => {
 UserAvatar.propTypes = {
   onClick: PropTypes.func.isRequired,
   showDropdown: PropTypes.bool,
-  dropdownContent: PropTypes.node
+  dropdownContent: PropTypes.node,
 };
 
 UserAvatar.defaultProps = {
   showDropdown: false,
-  dropdownContent: null
+  dropdownContent: null,
 };
 
 export default UserAvatar;
