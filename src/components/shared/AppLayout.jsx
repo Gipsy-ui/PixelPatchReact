@@ -72,7 +72,7 @@ const AppLayout = ({ children }) => {
                   <UserAvatar
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     showDropdown={isDropdownOpen}
-                    dropdownContent={<ProfileDropdown isOpen={isDropdownOpen} />}
+                    dropdownContent={<ProfileDropdown isOpen={isDropdownOpen} onClose={() => setIsDropdownOpen(false)} />}
                   />
                 </div>
 

@@ -256,3 +256,5 @@ const ClientAIAssistant = () => {
     </div>
   );
 };
+
+export default ClientAIAssistant;
