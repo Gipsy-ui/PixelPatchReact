@@ -34,13 +34,8 @@ const AssessmentModal = ({ isOpen, onClose, requestId }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log("Submitting assessment:", {
-      requestId,
-      diagnosticFindings,
-      possibleCauses,
-      parts: listParts ? parts : [],
-      addQuotation
-    });
+    // TODO: Replace with actual API call
+    // API call would go here: submitAssessment(requestId, { diagnosticFindings, possibleCauses, parts, addQuotation })
 
     onClose();
     navigate(ROUTES.BUSINESS.REPAIR_ASSESSMENT.replace(":id", requestId));

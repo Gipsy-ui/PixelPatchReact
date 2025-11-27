@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
 import { Bell, MessageCircle, Menu } from "lucide-react";
@@ -6,10 +6,16 @@ import TopNavigation from './TopNavigation';
 import UserAvatar from './UserAvatar';
 import ProfileDropdown from './ProfileDropdown';
 import Footer from './Footer';
+import { ROUTES } from '../../constants/routes';
 
 const AppLayout = ({ children }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+
+  const handleMessageClick = () => {
+    navigate(ROUTES.MESSAGES);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -54,6 +60,7 @@ const AppLayout = ({ children }) => {
 
                 {/* CHAT */}
                 <button 
+                  onClick={handleMessageClick}
                   className="bg-white text-gray-500 hover:text-blue-600 rounded-full p-2 transition-colors"
                   aria-label="Chat"
                 >

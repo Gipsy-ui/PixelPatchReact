@@ -4,7 +4,7 @@ import { ROUTES } from '../../constants/routes';
 import { Home, Hammer, Box, Tag, Star, Settings, HelpCircle } from 'lucide-react';
 
 // Main component to render the page
-export default function App() {
+export default function BusinessServices() {
   return <ShopServices />;
 }
 

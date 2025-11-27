@@ -14,7 +14,7 @@ const RequestExtensionModal = ({ isOpen, onClose, requestId }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Replace with real API call
-    console.log('Requesting extension for', requestId, { newDeadline, reason, file });
+    // API call would go here: requestExtension(requestId, { newDeadline, reason, file })
     // Close modal after submit
     onClose();
   };

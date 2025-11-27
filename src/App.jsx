@@ -46,6 +46,7 @@ import ShopDiscountModalRoute from "./components/Shop/ShopDiscountModal";
 import ShopReview from "./components/Shop/Review";
 import ShopService from "./components/Shop/Service";
 import ClientAiLanding from "./components/HomeLoggedInAI";
+import ClientAIAssistant from "./components/ClientAIChat";
 import PixelPatchLanding from "./components/HomeLoggedInAIBefore";
 import ClientMessages from "./components/Messages";
 
@@ -75,6 +76,21 @@ import ServiceDetail from "./components/business/ServiceDetail";
 import RepairRejectionModalRoute from "./components/business/RepairRejectionModalRoute";
 import RepairAssessmentModalRoute from "./components/business/RepairAssessmentModalRoute";
 import RepairQuotationModalRoute from "./components/business/RepairQuotationModalRoute";
+import RepairExtensionModalRoute from "./components/business/RepairExtensionModalRoute";
+
+// Admin pages
+import AdminDashboard from "./components/Admin/AdminMain";
+import AdminReports from "./components/Admin/AdminReports&Analytics";
+import AdminAILogs from "./components/Admin/AILogs_AIManagement";
+import AdminAISettings from "./components/Admin/AI GeneralSettings _AIManagement";
+import AdminUsersClients from "./components/Admin/UserManagementInClients_USERS";
+import AdminUsersProviders from "./components/Admin/UserManagementinBusiness_USERS";
+import AdminVerification from "./components/Admin/Verification_UserManagement";
+import AdminTransactions from "./components/Admin/Transaction_Financial";
+import AdminSupportAll from "./components/Admin/Support Tickets_ALL";
+import AdminSupportOpen from "./components/Admin/Support Tickets _OPEN";
+import AdminSupportInProgress from "./components/Admin/Support Tickets_IN PROGRESS";
+import AdminSupportClosed from "./components/Admin/Support Tickets_CLOSED";
 
 function App() {
   return (
@@ -87,6 +103,7 @@ function App() {
             <Route element={<ClientLayout />}>
 
               <Route path={ROUTES.DASHBOARD_AI} element={<ClientAiLanding />} />
+              <Route path={ROUTES.AI_ASSISTANT} element={<ClientAIAssistant />} />
               <Route path={ROUTES.MESSAGES} element={<ClientMessages />} />
               <Route path={ROUTES.SERVICES} element={<Services />} />
               <Route path={ROUTES.PARTNER} element={<BecomePartner />} />
@@ -155,6 +172,7 @@ function App() {
             <Route path={ROUTES.BUSINESS.REPAIR_REJECT_MODAL} element={<RepairRejectionModalRoute />} />
             <Route path={ROUTES.BUSINESS.REPAIR_ASSESSMENT_MODAL} element={<RepairAssessmentModalRoute />} />
             <Route path={ROUTES.BUSINESS.REPAIR_QUOTATION_MODAL} element={<RepairQuotationModalRoute />} />
+            <Route path={ROUTES.BUSINESS.REPAIR_EXTENSION_MODAL} element={<RepairExtensionModalRoute />} />
             <Route path={ROUTES.BUSINESS.SERVICES} element={<BusinessServices />} />
             <Route path={ROUTES.BUSINESS.SERVICE_ADD_DELETE} element={<ServiceAddDelete />} />
             <Route path={ROUTES.BUSINESS.SERVICE_DETAIL} element={<ServiceDetail />} />
@@ -163,6 +181,20 @@ function App() {
             <Route path={ROUTES.BUSINESS.SETTINGS} element={<BusinessSettings />} />
             <Route path={ROUTES.BUSINESS.HELP} element={<BusinessHelp />} />
           </Route>
+
+          {/* ADMIN ROUTES */}
+          <Route path={ROUTES.ADMIN.DASHBOARD} element={<AdminDashboard />} />
+          <Route path={ROUTES.ADMIN.REPORTS} element={<AdminReports />} />
+          <Route path={ROUTES.ADMIN.AI_LOGS} element={<AdminAILogs />} />
+          <Route path={ROUTES.ADMIN.AI_SETTINGS} element={<AdminAISettings />} />
+          <Route path={ROUTES.ADMIN.USERS_CLIENTS} element={<AdminUsersClients />} />
+          <Route path={ROUTES.ADMIN.USERS_PROVIDERS} element={<AdminUsersProviders />} />
+          <Route path={ROUTES.ADMIN.VERIFICATION} element={<AdminVerification />} />
+          <Route path={ROUTES.ADMIN.TRANSACTIONS} element={<AdminTransactions />} />
+          <Route path={ROUTES.ADMIN.SUPPORT_ALL} element={<AdminSupportAll />} />
+          <Route path={ROUTES.ADMIN.SUPPORT_OPEN} element={<AdminSupportOpen />} />
+          <Route path={ROUTES.ADMIN.SUPPORT_IN_PROGRESS} element={<AdminSupportInProgress />} />
+          <Route path={ROUTES.ADMIN.SUPPORT_CLOSED} element={<AdminSupportClosed />} />
 
           {/* PAGES WITH NO NAVBAR */}
           <Route path={ROUTES.SIGNUP} element={<SignUp />} />

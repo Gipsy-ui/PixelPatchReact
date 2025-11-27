@@ -2,6 +2,7 @@ export const ROUTES = {
   HOME: '/',
   DASHBOARD_AI_BEFORE:'/dashboard-ai-before',
   DASHBOARD_AI: '/dashboard-ai',
+  AI_ASSISTANT: '/ai-assistant',
   MESSAGES: '/messages',
   SERVICES: '/services',
   PARTNER: '/partner',
@@ -52,6 +53,25 @@ export const ROUTES = {
   DEVICES: '/devices',
   SETTINGS: '/settings',
 
+  ADMIN: {
+    DASHBOARD: '/admin',
+    REPORTS: '/admin/reports',
+    AI_LOGS: '/admin/ai-logs',
+    AI_SETTINGS: '/admin/ai-settings',
+    USERS_CLIENTS: '/admin/users/clients',
+    USERS_PROVIDERS: '/admin/users/providers',
+    VERIFICATION: '/admin/verification',
+    TRANSACTIONS: '/admin/transactions',
+    TRANSACTIONS_ALL: '/admin/transactions/all',
+    TRANSACTIONS_PAYMENTS: '/admin/transactions/payments',
+    TRANSACTIONS_PAYOUTS: '/admin/transactions/payouts',
+    TRANSACTIONS_REFUNDS: '/admin/transactions/refunds',
+    SUPPORT_ALL: '/admin/support/all',
+    SUPPORT_OPEN: '/admin/support/open',
+    SUPPORT_IN_PROGRESS: '/admin/support/in-progress',
+    SUPPORT_CLOSED: '/admin/support/closed',
+  },
+
   BUSINESS: {
     DASHBOARD: '/business',
     PROFILE: '/business/profile',
@@ -76,6 +96,7 @@ export const ROUTES = {
    REPAIR_REJECT_MODAL: '/business/repairs/:id/reject',
     REPAIR_ASSESSMENT_MODAL: '/business/repairs/:id/assessment/add',
     REPAIR_QUOTATION_MODAL: '/business/repairs/:id/quotation/add',
+    REPAIR_EXTENSION_MODAL: '/business/repairs/:id/extension/add',
   },
   LOGOUT: '/logout',
 };

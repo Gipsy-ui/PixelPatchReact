@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 
 // Main App component for preview
-export default function App() {
+export default function AccountSignUp() {
   return (
     // We wrap this in a gray background to make the white form visible
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4 py-10">
-      <AccountSignUp />
+      <AccountSignUpForm />
     </div>
   );
 }
 
 // The Account Sign Up Component
-function AccountSignUp() {
+function AccountSignUpForm() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 

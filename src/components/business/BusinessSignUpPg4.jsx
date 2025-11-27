@@ -1,5 +1,5 @@
 import React from 'react';
-export default function App() {
+export default function BusinessSignUpPg4() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 py-10 font-inter">
       <BusinessSignUpPageFour />

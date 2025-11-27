@@ -82,7 +82,7 @@ export default function ClientAiLanding() {
                 </button> */}
 
                 <button 
-                onClick={() => navigate(ROUTES.MESSAGES)}
+                onClick={() => navigate(ROUTES.AI_ASSISTANT)}
                   className="bg-white absolute right-3 top-1/2 -translate-y-1/2 
                              p-2 rounded-lg text-blue-600 hover:bg-blue-100">
                   <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">

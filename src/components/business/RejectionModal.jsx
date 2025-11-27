@@ -7,18 +7,11 @@ const RejectionModal = ({ isOpen, onClose, requestId }) => {
   const [rejectionReason, setRejectionReason] = useState('');
   const navigate = useNavigate();
 
-  const handleSave = () => {
-    navigate("/business/repairs");
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     
     // TODO: Replace with actual API call
-    console.log('Submitting rejection:', {
-      requestId,
-      reason: rejectionReason
-    });
+    // API call would go here: submitRejection(requestId, rejectionReason)
 
     // Close modal and navigate back to repairs list
     onClose();
@@ -63,7 +56,6 @@ const RejectionModal = ({ isOpen, onClose, requestId }) => {
           
           <div className="flex justify-end p-5 pt-0">
             <button
-            onClick={handleSave}
               type="submit"
               className="rounded-lg border border-transparent bg-red-600 py-2 px-6 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             >

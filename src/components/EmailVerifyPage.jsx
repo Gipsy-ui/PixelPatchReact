@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-export default function App() {
+export default function EmailVerifyPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200 p-4 font-inter">
       <EmailVerificationModal />

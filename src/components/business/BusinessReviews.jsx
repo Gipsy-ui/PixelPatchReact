@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Home, Hammer, Box, Tag, Star, Settings, HelpCircle } from 'lucide-react';
 
-export default function App() {
+export default function BusinessReviews() {
   return <ShopReviews />;
 }
 

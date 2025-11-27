@@ -1,14 +1,20 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import TopNavigation from './TopNavigation';
 import UserAvatar from './UserAvatar';
 import ProfileDropdown from './ProfileDropdown';
 import Footer from './Footer';
 import { Bell, MessageCircle, Menu } from "lucide-react";
 import { useState, useRef, useEffect } from 'react';
+import { ROUTES } from '../../constants/routes';
 
 export default function ClientLayout() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+
+  const handleMessageClick = () => {
+    navigate(ROUTES.MESSAGES);
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -39,7 +45,9 @@ export default function ClientLayout() {
             {/* RIGHT ICONS */}
             <div className="hidden md:flex items-center space-x-4">
               <Bell className="w-6 h-6 text-gray-500" />
-              <MessageCircle className="w-6 h-6 text-gray-500" />
+              <button onClick={handleMessageClick} className="bg-white hover:text-blue-600 transition-colors">
+                <MessageCircle className="w-6 h-6 text-gray-500" />
+              </button>
 
               <div ref={dropdownRef}>
                 <UserAvatar

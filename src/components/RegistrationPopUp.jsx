@@ -1,7 +1,7 @@
 import React from 'react';
 import PixelpatchLogo from '../assets/PixelpatchLogo.jpg';
 
-export default function App() {
+export default function RegistrationPopUp() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       <RegistrationPopup />

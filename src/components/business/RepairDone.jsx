@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../constants/routes';
 
 const RepairDone = () => {
   const { id } = useParams();
@@ -141,15 +142,16 @@ const RepairDone = () => {
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-3">
-          {/* <button
+          <button
             type="button"
+            onClick={() => navigate(ROUTES.BUSINESS.REPAIR_EXTENSION_MODAL.replace(':id', id || '001'))}
             className="rounded-lg border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Request Extension
-          </button> */}
+          </button>
           <button
             type="button"
-            onClick={() => navigate(`/business/repairs/${id || '001'}/completed`)}
+            onClick={() => navigate(ROUTES.BUSINESS.REPAIR_COMPLETED.replace(':id', id || '001'))}
             className="rounded-lg border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
             Confirm Drop-off

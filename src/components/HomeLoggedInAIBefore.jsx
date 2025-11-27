@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
 
-export default function App() {
+export default function HomeLoggedInAIBefore() {
   return <PixelPatchLanding />;
 }
 

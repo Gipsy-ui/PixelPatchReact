@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../constants/routes';
 
 // Main App component for preview
-export default function App() {
+export default function BusinessSignUpPg3() {
   return (
     // We wrap this in a gray background to make the white form visible
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4 py-10 font-inter">

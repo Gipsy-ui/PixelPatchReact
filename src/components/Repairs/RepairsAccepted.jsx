@@ -62,9 +62,87 @@ export default function RepairAccepted() {
           </span>
         </div>
 
-        {/* Progress Stepper Placeholder */}
+        {/* Progress Stepper */}
         <div className="w-full mb-8">
-          {/* Stepper goes here */}
+          <ol className="flex items-center w-full text-sm font-medium text-center text-gray-500">
+            {/* Step 1: Ready (Complete) */}
+            <li className="flex md:w-full items-center text-blue-600 after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
+              <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
+                <svg
+                  className="w-5 h-5 sm:w-6 sm:h-6 mr-2.5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                Ready
+              </span>
+            </li>
+            {/* Step 2: In Progress (Future) */}
+            <li className="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
+              <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
+                <span className="mr-2.5 border-2 border-gray-400 rounded-full p-0.5">
+                  <svg
+                    className="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </span>
+                In Progress
+              </span>
+            </li>
+            {/* Step 3: Delivery (Future) */}
+            <li className="flex md:w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10">
+              <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200">
+                <span className="mr-2.5 border-2 border-gray-400 rounded-full p-0.5">
+                  <svg
+                    className="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M8 16.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM15 16.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
+                    <path
+                      fillRule="evenodd"
+                      d="M12 2a1 1 0 011 1v2.345l.16.03a.5.5 0 01.363.65l-1.16 3.48A3 3 0 0110.02 11H5V7H3.5a1 1 0 01-1-1V3.5a1 1 0 011-1H12zm1 4.345V3H4.5v2.5H5v1.517l-1.381 4.143a1 1 0 00.961 1.34h2.44a1 1 0 01.96 1.339L7 16.5h-1.5a.5.5 0 000 1H8a.5.5 0 000-1H7.5a1 1 0 01-1-1V12h2.02a3 3 0 012.34-1.63l1.16-3.48.16-.03zM15.5 7H14v6.5a.5.5 0 000 1H15a.5.5 0 000-1H14.5a1 1 0 01-1-1V7h2V3.5a1 1 0 00-1-1h-1.5a1 1 0 00-1 1V7h3.5A1.5 1.5 0 0117 8.5v3.5a1.5 1.5 0 01-1.5 1.5h-2.5a.5.5 0 000 1h2.5a2.5 2.5 0 002.5-2.5V8.5A2.5 2.5 0 0015.5 6z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </span>
+                Delivery
+              </span>
+            </li>
+            {/* Step 4: Completed (Future) */}
+            <li className="flex items-center">
+              <span className="mr-2.5 border-2 border-gray-400 rounded-full p-0.5">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </span>
+              Completed
+            </li>
+          </ol>
         </div>
 
         {/* Main Content */}

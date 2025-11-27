@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from '../../constants/routes';
 
-export default function App() {
+export default function BusinessSignUpPg2() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4 py-10 font-inter">
       <BusinessSignUpPageTwo />

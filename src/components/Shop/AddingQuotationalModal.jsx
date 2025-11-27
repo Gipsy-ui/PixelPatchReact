@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // Main App component for preview
-export default function App() {
+export default function AddingQuotationalModal() {
   return (
     <div className="bg-gray-200 p-10 relative min-h-screen flex items-center justify-center font-inter">
       {/* The modal is shown by default for this preview */}

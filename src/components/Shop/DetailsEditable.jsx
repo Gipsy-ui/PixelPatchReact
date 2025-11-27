@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 // Main component to render the page
-export default function App() {
+export default function ShopDetailsEditable() {
   return <ShopServiceDetail />;
 }
 

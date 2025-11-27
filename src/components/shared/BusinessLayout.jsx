@@ -2,7 +2,7 @@
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import BusinessNavigation from '../business/BusinessNavigation';
 import UserAvatar from './UserAvatar';
-import ProfileDropdown from './ProfileDropdown';
+import BusinessProfileDropdown from './BusinessProfileDropdown';
 import Footer from './Footer';
 import { 
   Bell, 
@@ -140,7 +140,7 @@ export default function BusinessLayout() {
                 <UserAvatar 
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)} 
                   showDropdown={isDropdownOpen} 
-                  dropdownContent={<ProfileDropdown isOpen={isDropdownOpen} />} 
+                  dropdownContent={<BusinessProfileDropdown isOpen={isDropdownOpen} onClose={() => setIsDropdownOpen(false)} />} 
                 />
               </div>
             </div>

@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Wrench, Percent, Star, Settings as Cog, HelpCircle } from 'lucide-react';
 import { ROUTES } from '../../constants/routes';
 
-export default function ShopServiceDetail() {
+export default function ServiceAddDelete() {
 
   const navigate = useNavigate();
 
   const handleSave = () => {
-    navigate("/shop/details");
+    navigate(ROUTES.SHOP_MANAGEMENT.DETAILS);
   };
 
   return (

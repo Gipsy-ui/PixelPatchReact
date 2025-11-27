@@ -1,18 +1,20 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { ROUTES } from "../../constants/routes";
 
 // This component is rendered inside BusinessLayout, which already provides sidebar & header.
 export default function RepairPending() {
   const navigate = useNavigate();
-  const repairId = "001"; // You can replace this dynamically if coming from props or state
+  const { id } = useParams();
+  const repairId = id || "001";
 
   const handleReject = () => {
-    navigate(`/business/repairs/${repairId}/reject`);
+    navigate(ROUTES.BUSINESS.REPAIR_REJECT_MODAL.replace(':id', repairId));
   };
 
   const handleConfirmPickup = () => {
     // Navigate to awaiting assessment view
-    navigate('/business/repairs/awaiting-assessment'); 
+    navigate(ROUTES.BUSINESS.AWAITING_ASSESSMENT);
   };
 
   return (

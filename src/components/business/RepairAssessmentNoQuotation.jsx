@@ -31,8 +31,8 @@ const RepairAssessmentNoQuotation = () => {
         : null,
     };
 
-    console.log('Submitting quotation for request', id, payload);
     // TODO: send payload to API
+    // API call would go here: submitQuotation(id, payload)
     closeModal();
   };
 

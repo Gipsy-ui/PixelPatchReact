@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ROUTES } from '../../constants/routes';
 
-const ProfileDropdown = ({ isOpen, onClose }) => {
+const ProfileDropdown = ({ isOpen, onClose = () => {} }) => {
   const navigate = useNavigate();
 
   const handleNavigation = (route) => {
@@ -20,10 +20,10 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <div 
+      {/* <div 
         className="fixed inset-0 z-40"
         onClick={onClose}
-      />
+      /> */}
       <div className="absolute right-0 mt-2 w-64 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
         <div className="py-1" role="none">
           {/* User Info */}
@@ -61,7 +61,7 @@ const ProfileDropdown = ({ isOpen, onClose }) => {
 
 ProfileDropdown.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
 };
 
 export default ProfileDropdown;

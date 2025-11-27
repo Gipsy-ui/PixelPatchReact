@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 // Main component to render the page
-export default function App() {
-  return <ShopDiscounts />;
+export default function ShopDiscounts() {
+  return <ShopDiscountsContent />;
 }
 
 // The Shop Discounts Page Component
-function ShopDiscounts() {
+function ShopDiscountsContent() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileButtonRef = useRef(null);
   const profileDropdownRef = useRef(null);
