@@ -11,6 +11,7 @@ const ProfileDropdown = ({ isOpen }) => {
 
   // ✅ BUSINESS USER CHECK (role_id === 3)
   const isBusiness = user?.role_id === 3;
+  const currentMode = localStorage.getItem("app_mode") || "user";
 
   const handleLogout = () => {
     localStorage.clear();
@@ -40,14 +41,13 @@ const ProfileDropdown = ({ isOpen }) => {
       {/* LINKS */}
       <div className="py-1">
         <Link to={ROUTES.PROFILE} className="block px-4 py-3 hover:bg-gray-100">Profile</Link>
-        {/* <Link to={ROUTES.REPAIRS} className="block px-4 py-3 hover:bg-gray-100">Repairs</Link>
-        <Link to={ROUTES.DEVICES} className="block px-4 py-3 hover:bg-gray-100">Devices</Link>
-        <Link to="/ai-assistant" className="block px-4 py-3 hover:bg-gray-100">AI Assistant</Link> */}
-      </div>
+        <Link to={ROUTES.REPAIRS} className="block px-4 py-3 hover:bg-gray-100">Repairs</Link>
+        </div>
 
       {/* BUSINESS SECTION */}
       <div className="border-t py-1">
         {!isBusiness ? (
+          /* USER IS NOT A BUSINESS */
           <Link
             to={ROUTES.BUSINESS_SIGNUP.STEP1}
             className="block px-4 py-3 text-blue-600 hover:bg-gray-100"
@@ -55,14 +55,36 @@ const ProfileDropdown = ({ isOpen }) => {
             Register as Business
           </Link>
         ) : (
-          <Link
-            to={ROUTES.BUSINESS.DASHBOARD}
-            className="block px-4 py-3 text-blue-600 hover:bg-gray-100"
-          >
-            Switch to Business
-          </Link>
+          <>
+            {currentMode === "user" && (
+              <button
+                onClick={() => {
+                  localStorage.setItem("app_mode", "business");
+                  navigate(ROUTES.BUSINESS.DASHBOARD);
+                  window.location.reload();
+                }}
+                className=" bg-white w-full text-left px-4 py-3 text-blue-600 hover:bg-gray-100"
+              >
+                Switch to Business
+              </button>
+            )}
+
+            {currentMode === "business" && (
+              <button
+                onClick={() => {
+                  localStorage.setItem("app_mode", "user");
+                  navigate(ROUTES.HOME);
+                  window.location.reload();
+                }}
+                className=" bg-white w-full text-left px-4 py-3 text-blue-600 hover:bg-gray-100"
+              >
+                Switch to User
+              </button>
+            )}
+          </>
         )}
       </div>
+
 
       {/* SETTINGS */}
       <div className="border-t py-1">

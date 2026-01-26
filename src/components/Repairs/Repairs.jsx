@@ -1,212 +1,251 @@
-import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { ROUTES } from '../../constants/routes';
+// src/components/Repairs/Repairs.jsx
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const RepairCard = ({ status, date, deviceName, deviceType, repairType, message, onClick }) => {
-  const statusStyles = {
-    Pending: 'bg-yellow-100 text-yellow-800',
-    Accepted: 'bg-blue-100 text-blue-800',
-    'In Progress': 'bg-orange-100 text-orange-800',
-    Done: 'bg-green-100 text-green-800',
-    Completed: 'bg-gray-100 text-gray-800',
-    Rejected: 'bg-red-100 text-red-800',
-  };
+const API_BASE = import.meta.env.VITE_API_URL;
 
-  const messageStyles = {
-    Pending: 'bg-yellow-100',
-    Accepted: 'bg-blue-100',
-    'In Progress': 'bg-orange-100',
-    Done: 'bg-green-100',
-    Completed: 'bg-gray-100',
-    Rejected: 'bg-red-100',
-  };
+/* ======================================================
+   CLIENT REPAIR LIST — BACKEND WIRED
+====================================================== */
+
+const TABS = [
+  "All",
+  "Waiting for Shop",
+  "Needs Your Action",
+  "In Progress",
+  "Completed",
+];
+
+const tabColors = {
+  All: "bg-gray-500",
+  "Waiting for Shop": "bg-yellow-500",
+  "Needs Your Action": "bg-blue-500",
+  "In Progress": "bg-orange-500",
+  Completed: "bg-green-500",
+};
+
+/* -------------------------------
+   CLIENT FLOW HELPERS
+-------------------------------- */
+const isWaitingForShop = (r) => r.decision === "PENDING";
+
+const needsYourAction = (r) =>
+  (r.decision === "ACCEPTED" && r.client_approved === null) ||
+  (r.client_approved === 1 && r.payment_status === "PENDING");
+
+const isInProgress = (r) => r.status === "IN_PROGRESS";
+const isCompleted = (r) => r.status === "COMPLETED";
+
+const getUIStatus = (r) => {
+  if (isWaitingForShop(r)) return "Waiting for Shop";
+  if (needsYourAction(r)) return "Needs Your Action";
+  if (isInProgress(r)) return "In Progress";
+  if (isCompleted(r)) return "Completed";
+  return "Unknown";
+};
+
+const statusStyles = {
+  "Waiting for Shop": "bg-yellow-100 text-yellow-800",
+  "Needs Your Action": "bg-blue-100 text-blue-800",
+  "In Progress": "bg-orange-100 text-orange-800",
+  Completed: "bg-green-100 text-green-800",
+};
+
+const getClientMessage = (r) => {
+  if (r.decision === "PENDING")
+    return "Waiting for the shop to review your request.";
+
+  if (r.decision === "ACCEPTED" && r.client_approved === null)
+    return "Quotation is ready. Please review and approve.";
+
+  if (r.client_approved === 1 && r.payment_status === "PENDING")
+    return "Payment is required to proceed.";
+
+  if (r.status === "IN_PROGRESS")
+    return "Your device is currently being repaired.";
+
+  if (r.status === "COMPLETED")
+    return "Repair completed.";
+
+  return "";
+};
+
+const formatDate = (date) =>
+  new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(date));
+
+/* ======================================================
+   CARD
+====================================================== */
+const RepairCard = ({ repair, onClick }) => {
+  const uiStatus = getUIStatus(repair);
 
   return (
-    <div 
-      className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col h-full cursor-pointer hover:shadow-md transition-shadow"
+    <div
       onClick={onClick}
+      className="bg-white rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition"
     >
       <div className="flex justify-between items-center p-4">
-        <span className={`text-xs font-medium ${statusStyles[status]} px-2.5 py-0.5 rounded-full`}>
-          {status}
+        <span
+          className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${statusStyles[uiStatus]}`}
+        >
+          {uiStatus}
         </span>
-        <span className="text-xs text-gray-500">{date}</span>
+        <span className="text-xs text-gray-500">
+          {formatDate(repair.created_at)}
+        </span>
       </div>
-      <div className="p-4 pt-0 flex-grow">
+
+      <div className="p-4 pt-0">
         <img
           className="w-full h-32 object-contain mb-3"
-          src="https://placehold.co/300x200/e0f2fe/3b82f6?text=Phone"
-          alt={deviceName}
+          src="https://placehold.co/300x200/e0f2fe/3b82f6?text=Device"
+          alt={repair.device_name}
         />
-        <h2 className="font-semibold text-lg">{deviceName}</h2>
-        <p className="text-sm text-gray-600">{deviceType}</p>
-        <p className="text-sm text-gray-500">{repairType}</p>
-        <div className={`mt-3 p-2.5 rounded-md ${messageStyles[status]}`}>
-          <p className={`text-xs ${statusStyles[status]} font-medium`}>{message}</p>
-        </div>
+
+        <h2 className="font-semibold text-lg">
+          {repair.device_name}
+        </h2>
+
+        <p className="text-sm text-gray-500">
+          {repair.device_brand} • {repair.device_model}
+        </p>
+
+        <p className="text-sm text-gray-600 mt-2">
+          {getClientMessage(repair)}
+        </p>
       </div>
     </div>
   );
 };
 
-RepairCard.propTypes = {
-  status: PropTypes.oneOf(['Pending', 'Accepted', 'In Progress', 'Done', 'Completed', 'Rejected']).isRequired,
-  date: PropTypes.string.isRequired,
-  deviceName: PropTypes.string.isRequired,
-  deviceType: PropTypes.string.isRequired,
-  repairType: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
-};
-
-const tabColors = {
-  All: 'bg-gray-500',
-  Pending: 'bg-yellow-500',
-  Accepted: 'bg-blue-500',
-  'In Progress': 'bg-orange-500',
-  Done: 'bg-green-500',
-  Completed: 'bg-gray-500',
-  Rejected: 'bg-red-500',
-};
-
+/* ======================================================
+   PAGE
+====================================================== */
 const Repairs = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('All');
-  const tabs = ['All', 'Pending', 'Accepted', 'In Progress', 'Done', 'Completed'];
+  const token = localStorage.getItem("token");
 
-  const navRef = useRef(null);
+  const [repairs, setRepairs] = useState([]);
+  const [activeTab, setActiveTab] = useState("All");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const tabRefs = useRef([]);
-  const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0, bg: tabColors['All'] });
+  const [underlineStyle, setUnderlineStyle] = useState({
+    left: 0,
+    width: 0,
+    bg: tabColors.All,
+  });
 
-  // Function to handle navigation based on status
-  const handleNavigate = (cardStatus) => {
-    // Map status strings to routes
-    const statusRouteMap = {
-      'Accepted': ROUTES.REPAIRS_ACCEPTED,
-      'In Progress': ROUTES.REPAIRS_IN_PROGRESS,
-      'Progress': ROUTES.REPAIRS_IN_PROGRESS, // Handle "Progress" as well
-      'Done': ROUTES.REPAIRS_DONE,
-      'Completed': ROUTES.REPAIRS_COMPLETED,
-      'Rejected': ROUTES.REPAIRS_REJECTED,
+  /* -------------------------------
+     FETCH REPAIRS
+  -------------------------------- */
+  useEffect(() => {
+    const fetchRepairs = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          `${API_BASE}/api/client/repairs`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setRepairs(res.data.repairs);
+      } catch (err) {
+        setError("Failed to load repairs.");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const route = statusRouteMap[cardStatus];
-    if (route) {
-      navigate(route);
-    } else {
-      console.warn(`No route found for status: ${cardStatus}`);
-    }
-  };
+    fetchRepairs();
+  }, []);
 
-  const mockRepairs = [
-    {
-      status: 'Pending',
-      date: 'Oct 20, 2025',
-      deviceName: 'Samsung S25',
-      deviceType: 'Smartphone',
-      repairType: 'Screen Replacement',
-      message: "Waiting for the shop's review.",
-    },
-    {
-      status: 'Accepted',
-      date: 'Oct 22, 2025',
-      deviceName: 'Samsung S25',
-      deviceType: 'Smartphone',
-      repairType: 'Screen Replacement',
-      message: 'Ready for Pickup at your convenience.',
-    },
-    {
-      status: 'In Progress',
-      date: 'Oct 22, 2025',
-      deviceName: 'Samsung S25',
-      deviceType: 'Smartphone',
-      repairType: 'Screen Replacement',
-      message: 'Work in progress...',
-    },
-    {
-      status: 'Done',
-      date: 'Oct 22, 2025',
-      deviceName: 'Samsung S25',
-      deviceType: 'Smartphone',
-      repairType: 'Screen Replacement',
-      message: 'Your device has been repaired.',
-    },
-    {
-      status: 'Completed',
-      date: 'Oct 22, 2025',
-      deviceName: 'Samsung S25',
-      deviceType: 'Smartphone',
-      repairType: 'Screen Replacement',
-      message: 'Your request is complete.',
-    },
-    {
-      status: 'Rejected',
-      date: 'Oct 22, 2025',
-      deviceName: 'Samsung S25',
-      deviceType: 'Smartphone',
-      repairType: 'Screen Replacement',
-      message: 'Your request has been rejected.',
-    },
-  ];
+  /* -------------------------------
+     FILTER
+  -------------------------------- */
+  const filteredRepairs = repairs.filter((r) => {
+    if (activeTab === "All") return true;
+    if (activeTab === "Waiting for Shop") return isWaitingForShop(r);
+    if (activeTab === "Needs Your Action") return needsYourAction(r);
+    if (activeTab === "In Progress") return isInProgress(r);
+    if (activeTab === "Completed") return isCompleted(r);
+    return false;
+  });
 
-  const filteredRepairs = activeTab === 'All'
-    ? mockRepairs
-    : mockRepairs.filter(repair => repair.status === activeTab);
-
+  /* -------------------------------
+     TAB UNDERLINE
+  -------------------------------- */
   useEffect(() => {
-    const activeIndex = tabs.indexOf(activeTab);
-    if (tabRefs.current[activeIndex]) {
-      const tabEl = tabRefs.current[activeIndex];
+    const index = TABS.indexOf(activeTab);
+    const el = tabRefs.current[index];
+    if (el) {
       setUnderlineStyle({
-        left: tabEl.offsetLeft,
-        width: tabEl.offsetWidth,
-        bg: tabColors[activeTab] || 'bg-gray-500',
+        left: el.offsetLeft,
+        width: el.offsetWidth,
+        bg: tabColors[activeTab],
       });
     }
-  }, [activeTab, tabs]);
+  }, [activeTab]);
+
+  if (loading) {
+    return <div className="p-10 text-center text-gray-500">Loading repairs…</div>;
+  }
+
+  if (error) {
+    return <div className="p-10 text-center text-red-500">{error}</div>;
+  }
 
   return (
-    <div className="bg-gray-50 text-gray-900 flex flex-col min-h-screen">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Repairs</h1>
+    <div className="bg-gray-50 min-h-screen">
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-6">Repairs</h1>
 
         {/* Tabs */}
         <div className="border-b border-gray-200 relative">
-          <nav className="flex space-x-6 overflow-x-auto" aria-label="Tabs" ref={navRef}>
-            {tabs.map((tab, index) => (
+          <nav className="flex space-x-6">
+            {TABS.map((tab, i) => (
               <button
                 key={tab}
+                ref={(el) => (tabRefs.current[i] = el)}
                 onClick={() => setActiveTab(tab)}
-                ref={(el) => (tabRefs.current[index] = el)}
-                className={`bg-white whitespace-nowrap py-3 px-1 text-sm font-medium transition-colors duration-300 ease-in-out ${
-                  activeTab === tab ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'
+                className={`py-3 bg-white text-sm font-medium ${
+                  activeTab === tab
+                    ? "text-gray-900"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
               >
                 {tab}
               </button>
             ))}
           </nav>
+
           <span
-            className={`absolute bottom-0 h-0.5 transition-all duration-300 ease-in-out ${underlineStyle.bg}`}
-            style={{ left: underlineStyle.left, width: underlineStyle.width }}
+            className={`absolute bottom-0 h-0.5 transition-all ${underlineStyle.bg}`}
+            style={{
+              left: underlineStyle.left,
+              width: underlineStyle.width,
+            }}
           />
         </div>
 
-        {/* Repairs Grid */}
+        {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-          {filteredRepairs.map((repair, index) => (
+          {filteredRepairs.map((repair) => (
             <RepairCard
-              key={index}
-              {...repair}
-              onClick={() => handleNavigate(repair.status)}
+              key={repair.id}
+              repair={repair}
+              onClick={() => navigate(`/repairs/${repair.id}`)}
             />
           ))}
         </div>
 
         {filteredRepairs.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-sm text-gray-500">No repairs to show.</p>
+          <div className="text-center py-16 text-gray-500 text-sm">
+            No repairs to show.
           </div>
         )}
       </main>

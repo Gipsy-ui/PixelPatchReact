@@ -1,3 +1,4 @@
+// src/components/business/index.js
 export { default as Repair } from './Repair';
 export { default as RepairDetails } from './RepairDetails';
 export { default as RepairAwaitingAssessment } from './RepairAwaitingAssessment';

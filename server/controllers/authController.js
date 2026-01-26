@@ -113,6 +113,8 @@ export const login = (req, res) => {
       });
     }
   );
+  console.log("LOGIN SECRET:", process.env.JWT_SECRET);
+
 };
 
 

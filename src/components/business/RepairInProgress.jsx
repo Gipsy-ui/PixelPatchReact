@@ -1,199 +1,230 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { RequestExtensionModal } from './index';
+// src/components/business/RepairInProgress.jsx
+import { useParams } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const RepairInProgress = () => {
   const { id } = useParams();
-  const [isExtensionModalOpen, setIsExtensionModalOpen] = useState(false);
-  const navigate = useNavigate();
 
+  /* ----------------------------------
+     STATE (ALL HOOKS FIRST)
+  ---------------------------------- */
+  const [repair, setRepair] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [completing, setCompleting] = useState(false);
+
+  /* ----------------------------------
+     FETCH REPAIR (IN_PROGRESS or COMPLETED)
+  ---------------------------------- */
+  useEffect(() => {
+    const fetchRepair = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.get(
+          `${API_BASE}/api/business/repairs/${id}/in-progress`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        setRepair(res.data.repair);
+      } catch (err) {
+        console.error("❌ Failed to load repair:", err);
+        alert("Repair not found");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRepair();
+  }, [id]);
+
+  /* ----------------------------------
+     DERIVED VALUES (SAFE)
+  ---------------------------------- */
+  const isCompleted = repair?.status === "COMPLETED";
+
+  const startedAt = useMemo(() => {
+    if (!repair?.started_at) return null;
+    return new Date(repair.started_at);
+  }, [repair]);
+
+  const completedAt = useMemo(() => {
+    if (!repair?.completed_at) return null;
+    return new Date(repair.completed_at);
+  }, [repair]);
+
+  const deadline = useMemo(() => {
+    if (!repair?.quotation?.estimated_completion_time) return null;
+    return new Date(repair.quotation.estimated_completion_time);
+  }, [repair]);
+
+  const daysDiff = useMemo(() => {
+    if (!completedAt || !deadline) return null;
+    const ms = completedAt - deadline;
+    return Math.ceil(ms / (1000 * 60 * 60 * 24));
+  }, [completedAt, deadline]);
+
+  /* ----------------------------------
+     ACTION: MARK AS COMPLETED
+  ---------------------------------- */
+  const handleMarkAsCompleted = async () => {
+    if (!repair || isCompleted) return;
+
+    try {
+      setCompleting(true);
+      const token = localStorage.getItem("token");
+
+      await axios.post(
+        `${API_BASE}/api/business/repairs/${id}/complete`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // Update local state only
+      setRepair(prev => ({
+        ...prev,
+        status: "COMPLETED",
+        completed_at: new Date().toISOString()
+      }));
+
+      alert("Repair marked as completed");
+    } catch (err) {
+      alert(err?.response?.data?.message || "Failed to complete repair");
+    } finally {
+      setCompleting(false);
+    }
+  };
+
+  /* ----------------------------------
+     RENDER GUARDS (AFTER EVERYTHING)
+  ---------------------------------- */
+  if (loading) return null;
+  if (!repair) return null;
+
+  /* ----------------------------------
+     UI
+  ---------------------------------- */
   return (
-    <div className="flex h-full">
-      {/* Left Sidebar & header are part of global layout in app; this component focuses on page content */}
-      <main className="flex-1 overflow-y-auto p-6">
-        <div className="bg-yellow-100 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg mb-6">
-          <span className="font-bold">Deadline:</span> Oct 30, 2025
+    <main className="flex-1 overflow-y-auto p-6">
+      <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 space-y-8">
+
+        {/* HEADER */}
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">Request #{id}</h1>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              isCompleted
+                ? "bg-blue-100 text-blue-800"
+                : "bg-green-100 text-green-800"
+            }`}
+          >
+            {isCompleted ? "Completed" : "In Progress"}
+          </span>
         </div>
 
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Request #{id || '001'}</h1>
-          <span className="text-sm font-medium bg-green-100 text-green-800 px-3 py-1 rounded-full">In Progress</span>
+        {/* TIMELINE */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm space-y-1">
+          {startedAt && <p>🛠 Started: {startedAt.toLocaleDateString()}</p>}
+          {deadline && <p>📅 Deadline: {deadline.toLocaleDateString()}</p>}
+          {completedAt && <p>✅ Completed: {completedAt.toLocaleDateString()}</p>}
+
+          {daysDiff !== null && (
+            <p className={daysDiff <= 0 ? "text-green-600" : "text-red-600"}>
+              {daysDiff <= 0
+                ? `Finished ${Math.abs(daysDiff)} day(s) early`
+                : `Finished ${daysDiff} day(s) late`}
+            </p>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white p-6 rounded-lg shadow border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Request Information</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-gray-500">Device</span>
-                  <p className="font-medium text-gray-800">Samsung S25</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Pickup Address</span>
-                  <p className="font-medium text-gray-800">112, Normal Road, Baliwasan Zamboanga City</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Device Type</span>
-                  <p className="font-medium text-gray-800">Smartphone</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Preferred Time</span>
-                  <p className="font-medium text-gray-800">Oct 25, 2025</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Repair Type</span>
-                  <p className="font-medium text-gray-800">Screen Replacement</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Service Type</span>
-                  <p className="font-medium text-gray-800">Pickup</p>
-                </div>
-                <div className="md:col-span-2">
-                  <span className="text-gray-500">Description</span>
-                  <p className="font-medium text-gray-800">The screen of the phone is broken and it is not turning on.</p>
-                </div>
-              </div>
-            </div>
+        <hr />
 
-            <div className="bg-white p-6 rounded-lg shadow border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Reference Images</h2>
-              <div className="flex flex-wrap gap-4">
-                <img src="https://placehold.co/150x150/e0f2fe/3b82f6?text=Phone+Front" alt="Phone Front" className="w-24 h-24 rounded-lg object-contain border border-gray-200" />
-                <img src="https://placehold.co/150x150/e0f2fe/3b82f6?text=Phone+Back" alt="Phone Back" className="w-24 h-24 rounded-lg object-contain border border-gray-200" />
-                <img src="https://placehold.co/150x150/e0f2fe/3b82f6?text=Phone+Side" alt="Phone Side" className="w-24 h-24 rounded-lg object-contain border border-gray-200" />
-              </div>
-            </div>
+        {/* REQUEST INFO */}
+        <section>
+          <h2 className="text-lg font-semibold mb-2">Request Information</h2>
+          <p><strong>Device:</strong> {repair.device_name}</p>
+          <p><strong>Service Type:</strong> {repair.delivery_method}</p>
+          <p><strong>Description:</strong> {repair.issue_description}</p>
+        </section>
 
-            <div className="bg-white p-6 rounded-lg shadow border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Assessment</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-gray-500">Device Condition</span>
-                  <p className="font-medium text-gray-800">Not Good.</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Observed Issues</span>
-                  <p className="font-medium text-gray-800">The phone might have internal problems.</p>
-                </div>
-                <div className="md:col-span-2">
-                  <span className="text-gray-500">Recommendation</span>
-                  <p className="font-medium text-gray-800">Overall it can be done.</p>
-                </div>
-                <div className="md:col-span-2">
-                  <span className="text-gray-500">References</span>
-                  <div className="flex flex-wrap gap-4 mt-2">
-                    <img src="https://placehold.co/150x150/e0f2fe/3b82f6?text=Ref+1" alt="Reference 1" className="w-24 h-24 rounded-lg object-contain border border-gray-200" />
-                    <img src="https://placehold.co/150x150/e0f2fe/3b82f6?text=Ref+2" alt="Reference 2" className="w-24 h-24 rounded-lg object-contain border border-gray-200" />
-                  </div>
-                </div>
-              </div>
-            </div>
+        <hr />
 
-            <div className="bg-white p-6 rounded-lg shadow border border-gray-100">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Transaction Details</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="text-gray-500">Paid by:</span>
-                  <p className="font-medium text-gray-800">GCash</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Client:</span>
-                  <p className="font-medium text-gray-800">John Doe</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Invoice:</span>
-                  <a href="#" className="font-medium text-blue-600 hover:underline">View &gt;</a>
-                </div>
-                <div>
-                  <span className="text-gray-500">Address:</span>
-                  <p className="font-medium text-gray-800">112, Normal Road, Baliwasan Zamboanga City</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Request Time:</span>
-                  <p className="font-medium text-gray-800">10-20-2025 09:18</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Contact:</span>
-                  <p className="font-medium text-gray-800">+63 9875567412</p>
-                </div>
-                <div>
-                  <span className="text-gray-500">Payment Time:</span>
-                  <p className="font-medium text-gray-800">10-22-2025 10:41</p>
-                </div>
-              </div>
-            </div>
+        {/* ASSESSMENT */}
+        <section>
+          <h2 className="text-lg font-semibold mb-2">Assessment</h2>
+          <p><strong>Condition:</strong> {repair.assessment?.device_condition || "—"}</p>
+          <p><strong>Issues:</strong> {repair.assessment?.observed_issues || "—"}</p>
+          <p><strong>Recommendation:</strong> {repair.assessment?.recommendation || "—"}</p>
+        </section>
 
+        <hr />
+
+        {/* PAYMENT */}
+        <section>
+          <h2 className="text-lg font-semibold mb-4">Payment Breakdown</h2>
+
+          {repair.services?.length > 0 && (
+            <div className="space-y-1 mb-4">
+              {repair.services.map((s, i) => (
+                <div key={i} className="flex justify-between text-sm">
+                  <span>{s.name}</span>
+                  <span>₱{Number(s.price).toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {repair.parts?.length > 0 && (
+            <div className="space-y-1 mb-4">
+              {repair.parts.map((p, i) => (
+                <div key={i} className="flex justify-between text-sm">
+                  <span>{p.name}</span>
+                  <span>₱{Number(p.cost).toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="border-t pt-3 flex justify-between font-semibold">
+            <span>Total Paid</span>
+            <span className="text-blue-600">
+              ₱{Number(repair.payment?.amount || 0).toLocaleString()}
+            </span>
           </div>
 
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white p-6 rounded-lg shadow border border-gray-100 sticky top-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Quotation</h2>
+          {repair.payment?.payment_link && (
+            <a
+              href={repair.payment.payment_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mt-3 text-sm text-blue-600 underline"
+            >
+              View Invoice
+            </a>
+          )}
+        </section>
 
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Labor Fee:</span>
-                  <span className="font-medium text-gray-800">500.00 PHP</span>
-                </div>
-                <div className="border-t border-gray-100 pt-3">
-                  <span className="text-gray-600">Parts Cost:</span>
-                  <div className="flex justify-between items-center mt-1">
-                    <span className="text-gray-500 pl-2">Samsung S25 Screen</span>
-                    <span className="font-medium text-gray-800">4,500.00 PHP</span>
-                  </div>
-                  <div className="flex justify-between items-center mt-1">
-                    <span className="text-gray-500 pl-2">Samsung Front Camera</span>
-                    <span className="font-medium text-gray-800">2,500.00 PHP</span>
-                  </div>
-                </div>
-                <div className="border-t border-gray-200 pt-3">
-                  <div className="flex justify-between text-base">
-                    <span className="font-semibold text-gray-900">Total Estimate:</span>
-                    <span className="font-bold text-blue-600">5,000.00 PHP</span>
-                  </div>
-                </div>
-                <div className="border-t border-gray-100 pt-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Estimated Completion Time:</span>
-                    <span className="font-medium text-gray-800">5 days</span>
-                  </div>
-                  <div className="flex justify-between mt-1">
-                    <span className="text-gray-600">Warranty Coverage:</span>
-                    <span className="font-medium text-gray-800">6 Months</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+        {/* ACTION */}
+        {!isCompleted && (
+          <div className="flex justify-end pt-4">
+            <button
+              onClick={handleMarkAsCompleted}
+              disabled={completing}
+              className={`rounded-lg px-5 py-2 text-sm text-white ${
+                completing
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              {completing ? "Completing..." : "Mark as Completed"}
+            </button>
           </div>
-        </div>
+        )}
+      </div>
+    </main>
 
-  <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={() => setIsExtensionModalOpen(true)}
-            className="rounded-lg border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Request Extension
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate(`/business/repairs/${id || '001'}/done`)}
-            className="rounded-lg border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Mark as Done
-          </button>
-        </div>
-
-        {/* Request Extension Modal */}
-        <RequestExtensionModal
-          isOpen={isExtensionModalOpen}
-          onClose={() => setIsExtensionModalOpen(false)}
-          requestId={id || '001'}
-        />
-
-      </main>
-    </div>
   );
 };
 

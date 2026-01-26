@@ -1,105 +1,345 @@
-import { Link } from 'react-router-dom';
-import { ROUTES } from '../constants/routes';
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { ROUTES } from "../constants/routes";
+
+const API_BASE = import.meta.env.VITE_API_URL;
 
 const Services = () => {
+  const [shops, setShops] = useState([]);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // UX STATE
+  const [search, setSearch] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+
+  // SHOP FILTERS
+  const [minShopRating, setMinShopRating] = useState("all");
+
+  // SERVICE FILTERS
+  const [serviceCategory, setServiceCategory] = useState("all");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [shopsRes, servicesRes] = await Promise.all([
+          axios.get(`${API_BASE}/api/public/shops`),
+          axios.get(`${API_BASE}/api/public/services`)
+        ]);
+
+        setShops(Array.isArray(shopsRes.data.shops) ? shopsRes.data.shops : []);
+        setServices(Array.isArray(servicesRes.data.services) ? servicesRes.data.services : []);
+      } catch (err) {
+        console.error("❌ SERVICES LOAD ERROR:", err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+  //=========================
+  // HELPERS
+  //=========================
+  const DAYS = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const isShopOpenNow = (shop) => {
+    if (
+      !shop?.open_time ||
+      !shop?.closing_time ||
+      !shop?.days_from ||
+      !shop?.days_to
+    ) {
+      return false;
+    }
+
+    const now = new Date();
+    const currentDayIndex = now.getDay();
+
+    const fromIndex = DAYS.indexOf(shop.days_from);
+    const toIndex = DAYS.indexOf(shop.days_to);
+
+    if (fromIndex === -1 || toIndex === -1) return false;
+
+    // ✅ Day check (handles wrap-around)
+    const isDayOpen =
+      fromIndex <= toIndex
+        ? currentDayIndex >= fromIndex && currentDayIndex <= toIndex
+        : currentDayIndex >= fromIndex || currentDayIndex <= toIndex;
+
+    if (!isDayOpen) return false;
+
+    // ✅ Time check
+    const [openH, openM] = shop.open_time.split(":").map(Number);
+    const [closeH, closeM] = shop.closing_time.split(":").map(Number);
+
+    const openTime = new Date();
+    openTime.setHours(openH, openM, 0);
+
+    const closeTime = new Date();
+    closeTime.setHours(closeH, closeM, 0);
+
+    return now >= openTime && now <= closeTime;
+  };
+
+  const formatTime = (time) => {
+    if (!time) return "";
+    const [h, m] = time.split(":");
+    const hour = Number(h);
+    const suffix = hour >= 12 ? "PM" : "AM";
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${m} ${suffix}`;
+  };
+
+
+  if (loading) {
+    return <div className="p-10 text-center text-gray-500">Loading…</div>;
+  }
+
+  /* =========================
+     FILTERED DATA
+  ========================= */
+
+  const filteredShops = shops.filter((shop) => {
+    const matchesSearch =
+      shop.name.toLowerCase().includes(search.toLowerCase());
+
+    const matchesRating =
+      minShopRating === "all" ||
+      Number(shop.rating_average) >= Number(minShopRating);
+
+    return matchesSearch && matchesRating;
+  });
+
+  const filteredServices = services.filter((service) => {
+    const matchesSearch =
+      service.name.toLowerCase().includes(search.toLowerCase());
+
+    const matchesCategory =
+      serviceCategory === "all" ||
+      service.category === serviceCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  const resetFilters = () => {
+    setSearch("");
+    setMinShopRating("all");
+    setServiceCategory("all");
+  };
+
   return (
-    <div className="bg-white text-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <h2 className="text-3xl font-extrabold mb-8">Explore Services</h2>
+    <div className="bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 py-14 space-y-14">
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <input
-            type="text"
-            placeholder="Search by Name..."
-            className="rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2"
-          />
-          <select className="rounded-lg border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-3 py-2">
-            <option>All Status</option>
-            <option>Open</option>
-            <option>Closed</option>
-          </select>
-          <button className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50">Clear</button>
+        {/* =========================
+            HEADER + SEARCH
+        ========================= */}
+        <div>
+          <h2 className="text-3xl font-bold">Explore Repair Services</h2>
+          <p className="text-gray-600 mt-1">
+            Find trusted shops and popular repair services
+          </p>
+
+          <div className="mt-6 flex flex-col gap-4">
+            <input
+              type="text"
+              placeholder="Search shops or services…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full rounded-xl border border-gray-300 px-5 py-3 text-sm
+                         focus:border-blue-500 focus:ring-blue-500"
+            />
+
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="text-sm bg-white font-medium text-blue-600"
+              >
+                {showFilters ? "Hide filters" : "Show filters"}
+              </button>
+
+              {(search || minShopRating !== "all" || serviceCategory !== "all") && (
+                <button
+                  onClick={resetFilters}
+                  className="text-sm bg-white font-medium text-red-600"
+                >
+                  Clear all filters
+                </button>
+              )}
+            </div>
+
+            {showFilters && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* SHOP RATING */}
+                <select
+                  value={minShopRating}
+                  onChange={(e) => setMinShopRating(e.target.value)}
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm"
+                >
+                  <option value="all">All shop ratings</option>
+                  <option value="4.5">4.5 ★ & up</option>
+                  <option value="4">4 ★ & up</option>
+                  <option value="3">3 ★ & up</option>
+                </select>
+
+                {/* SERVICE CATEGORY */}
+                <select
+                  value={serviceCategory}
+                  onChange={(e) => setServiceCategory(e.target.value)}
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm"
+                >
+                  <option value="all">All service categories</option>
+                  <option value="SMARTPHONE">Smartphone</option>
+                  <option value="LAPTOP">Laptop</option>
+                  <option value="DESKTOP">Desktop</option>
+                  <option value="TABLET">Tablet</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-8">
-          <button className="bg-white font-black border flex items-center justify-center w-full md:w-auto py-3 rounded-lg hover:bg-gray-50 transition shadow-sm px-4">Smartphone</button>
-          <button className="bg-white font-black border flex items-center justify-center w-full md:w-auto py-3 rounded-lg hover:bg-gray-50 transition shadow-sm px-4"> Laptop</button>
-          <button className="bg-white font-black border flex items-center justify-center w-full md:w-auto py-3 rounded-lg hover:bg-gray-50 transition shadow-sm px-4"> Tablet</button>
-          <button className="bg-white font-black border flex items-center justify-center w-full md:w-auto py-3 rounded-lg hover:bg-gray-50 transition shadow-sm px-4"> Gaming Consoles</button>
-          <button className="bg-white font-black border flex items-center justify-center w-full md:w-auto py-3 rounded-lg hover:bg-gray-50 transition shadow-sm px-4"> Desktop CPU</button>
-        </div>
+        {/* =========================
+            TOP REPAIR SHOPS
+        ========================= */}
+        <section>
+          <h3 className="text-2xl font-bold mb-2">Top Repair Shops</h3>
+          <p className="text-sm text-gray-500 mb-6">
+            Showing {filteredShops.length} shop{filteredShops.length !== 1 && "s"}
+          </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          {/* Card 1 */}
-          <div className="bg-white rounded-lg shadow1-md overflow-hidden hover:shadow-lg transition flex flex-col justify-evenly">
-            <img src="https://placehold.co/300x200/e0e7ff/3b82f6?text=Shop+Image" alt="Shop Image" className="w-full h-32 object-cover" />
-            <div className="p-4 flex flex-col justify-between">
-              <h3 className="font-semibold text-gray-900">TechFix Pro</h3>
-              <div className="flex items-center mt-1 text-yellow-400">★★★★★<span className="text-xs text-gray-600 ml-1">4.5</span></div>
-              <p className="text-xs text-gray-500 mt-2">123 Normal Road, Balamban</p>
-              <div className="mt-3 flex flex-wrap gap-1">
-                <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-0.5 rounded-full">Desktop CPU</span>
-              </div>
-              <Link to={ROUTES.SHOP_DETAIL(1)} className="block w-full text-center bg-blue-600 text-white rounded-md py-2 text-sm font-medium mt-4 hover:bg-blue-700">View Details</Link>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredShops.map((shop) => {
+              const openNow = isShopOpenNow(shop); // ✅ FIXED
+
+              return (
+                <Link
+                  key={`shop-${shop.id}`}
+                  to={ROUTES.SHOP_DETAIL(shop.id)}
+                  className="bg-white rounded-xl border border-gray-200 p-5
+                            shadow-sm transition hover:shadow-md hover:border-blue-500"
+                >
+                  {/* HEADER */}
+                  <div className="flex items-start justify-between gap-3">
+                    <h4 className="font-semibold text-lg leading-tight">
+                      {shop.name}
+                    </h4>
+
+                    <span
+                      className={`text-xs font-medium px-3 py-1 rounded-full shrink-0
+                        ${openNow
+                          ? "bg-green-100 text-green-700"
+                          : "bg-red-100 text-red-700"
+                        }`}
+                    >
+                      {openNow ? "Open now" : "Closed"}
+                    </span>
+                  </div>
+
+                  {/* RATING */}
+                  <p className="text-yellow-500 text-sm mt-1">
+                    ★ {shop.rating_average}
+                  </p>
+
+                  {/* HOURS */}
+                  <p className="text-xs text-gray-500 mt-2">
+                    🕒 Today: {formatTime(shop.open_time)} – {formatTime(shop.closing_time)}
+                  </p>
+
+                  {/* ADDRESS */}
+                  <p className="text-xs text-gray-500 mt-2 line-clamp-2">
+                    {shop.street}, {shop.barangay}, {shop.province}
+                  </p>
+
+                  {/* VERIFIED */}
+                  {shop.is_verified && (
+                    <span className="inline-flex items-center gap-1 mt-3
+                                    text-xs font-medium bg-green-100 text-green-700
+                                    px-3 py-1 rounded-full w-fit">
+                      ✔ Verified Shop
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+
           </div>
+        </section>
 
-          {/* Other cards (duplicated samples) */}
-          <div className="bg-white rounded-lg shadow1-md overflow-hidden hover:shadow-lg transition flex flex-col justify-evenly">
-            <img src="https://placehold.co/300x200/e0e7ff/3b82f6?text=Shop+Image" alt="Shop Image" className="w-full h-32 object-cover" />
-            <div className="p-4 flex flex-col justify-between">
-              <h3 className="font-semibold text-gray-900">RepairHub</h3>
-              <div className="flex items-center mt-1 text-yellow-400">★★★★☆<span className="text-xs text-gray-600 ml-1">4.2</span></div>
-              <p className="text-xs text-gray-500 mt-2">45 Tech Street, Zamboanga</p>
-              <div className="mt-3 flex flex-wrap gap-1">
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">Laptop</span>
-              </div>
-              <Link to={ROUTES.SHOP_DETAIL(2)} className="block w-full text-center bg-blue-600 text-white rounded-md py-2 text-sm font-medium mt-4 hover:bg-blue-700">View Details</Link>
+
+        {/* =========================
+            POPULAR SERVICES
+        ========================= */}
+        <section>
+          <h3 className="text-2xl font-bold mb-2">Popular Repair Services</h3>
+          <p className="text-sm text-gray-500 mb-6">
+            Showing {filteredServices.length} service{filteredServices.length !== 1 && "s"}
+          </p>
+
+          {filteredServices.length === 0 ? (
+            <p className="text-sm text-gray-500">No services match your filters.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {filteredServices.map((service) => (
+                <Link
+                  key={service.service_key}
+                  to={`/services/${service.service_key}`}
+                  className="group bg-white rounded-xl border border-gray-200 p-5
+                             shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <h4 className="font-semibold text-lg leading-snug text-gray-900">
+                      {service.name}
+                    </h4>
+
+                    <span
+                      className="shrink-0 text-xs font-medium
+                                bg-blue-100 text-blue-700
+                                px-3 py-1 rounded-full"
+                    >
+                      {service.category}
+                    </span>
+                  </div>
+                  <div className="mt-3 text-sm text-gray-600 space-y-1">
+                    <p>
+                      Offered by <strong>{service.shop_count}</strong> shops
+                    </p>
+
+                    <p className="text-yellow-500 font-medium">
+                      ★ {service.avg_shop_rating}
+                    </p>
+                  </div>
+
+                  <div className="mt-4">
+                    <p className="text-lg font-bold">
+                      ₱{service.min_price} – ₱{service.max_price}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Price varies per shop
+                    </p>
+                  </div>
+
+                  <div className="mt-5">
+                    <span className="block text-center bg-blue-600 text-white
+                                     rounded-lg py-2 text-sm font-medium
+                                     group-hover:bg-blue-700 transition">
+                      View service →
+                    </span>
+                  </div>
+                </Link>
+              ))}
             </div>
-          </div>
+          )}
+        </section>
 
-          <div className="bg-white rounded-lg shadow1-md overflow-hidden hover:shadow-lg transition flex flex-col justify-evenly">
-            <img src="https://placehold.co/300x200/e0e7ff/3b82f6?text=Shop+Image" alt="Shop Image" className="w-full h-32 object-cover" />
-            <div className="p-4 flex flex-col justify-between">
-              <h3 className="font-semibold text-gray-900">GadgetWorks</h3>
-              <div className="flex items-center mt-1 text-yellow-400">★★★★★<span className="text-xs text-gray-600 ml-1">5.0</span></div>
-              <p className="text-xs text-gray-500 mt-2">Near WMSU, Zamboanga City</p>
-              <div className="mt-3 flex flex-wrap gap-1">
-                <span className="bg-pink-100 text-pink-800 text-xs font-medium px-2 py-0.5 rounded-full">Smartphone</span>
-                <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded-full">Tablet</span>
-              </div>
-              <Link to={ROUTES.SHOP_DETAIL(3)} className="block w-full text-center bg-blue-600 text-white rounded-md py-2 text-sm font-medium mt-4 hover:bg-blue-700">View Details</Link>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow1-md overflow-hidden hover:shadow-lg transition flex flex-col justify-evenly">
-            <img src="https://placehold.co/300x200/e0e7ff/3b82f6?text=Shop+Image" alt="Shop Image" className="w-full h-32 object-cover" />
-            <div className="p-4 flex flex-col justify-between">
-              <h3 className="font-semibold text-gray-900">FixLab</h3>
-              <div className="flex items-center mt-1 text-yellow-400">★★★★☆<span className="text-xs text-gray-600 ml-1">4.3</span></div>
-              <p className="text-xs text-gray-500 mt-2">12 Main Avenue, Pagadian</p>
-              <div className="mt-3 flex flex-wrap gap-1">
-                <span className="bg-indigo-100 text-indigo-800 text-xs font-medium px-2 py-0.5 rounded-full">Laptop</span>
-              </div>
-              <Link to={ROUTES.SHOP_DETAIL(4)} className="block w-full text-center bg-blue-600 text-white rounded-md py-2 text-sm font-medium mt-4 hover:bg-blue-700">View Details</Link>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow1-md overflow-hidden hover:shadow-lg transition flex flex-col justify-evenly">
-            <img src="https://placehold.co/300x200/e0e7ff/3b82f6?text=Shop+Image" alt="Shop Image" className="w-full h-32 object-cover" />
-            <div className="p-4 flex flex-col justify-between">
-              <h3 className="font-semibold text-gray-900">ByteCare</h3>
-              <div className="flex items-center mt-1 text-yellow-400">★★★☆☆<span className="text-xs text-gray-600 ml-1">3.8</span></div>
-              <p className="text-xs text-gray-500 mt-2">78 Tech Valley, Dipolog</p>
-              <div className="mt-3 flex flex-wrap gap-1">
-                <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">Desktop CPU</span>
-              </div>
-              <Link to={ROUTES.SHOP_DETAIL(5)} className="block w-full text-center bg-blue-600 text-white rounded-md py-2 text-sm font-medium mt-4 hover:bg-blue-700">View Details</Link>
-            </div>
-          </div>
-
-
-        </div>
       </div>
     </div>
   );

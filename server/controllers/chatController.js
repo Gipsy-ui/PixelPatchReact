@@ -1,3 +1,6 @@
+// server/controllers/chatController.js
+import db from "../config/db.js";
+
 export const startChat = (req, res) => {
   const client_id = req.user.id;   // ⬅️ authenticated user
   const { shop_id } = req.body;

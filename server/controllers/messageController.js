@@ -5,54 +5,54 @@ import db from "../config/db.js";
    START CHAT (OR RETURN EXISTING)
 ===========================================
 */
-export const startConversation = (req, res) => {
-  const client_id = req.user.id;
-  const { request_id, shop_id } = req.body;
+// export const startConversation = (req, res) => {
+//   const client_id = req.user.id;
+//   const { request_id, shop_id } = req.body;
 
-  if (!shop_id) {
-    return res.status(400).json({ error: "shop_id required" });
-  }
+//   if (!shop_id) {
+//     return res.status(400).json({ error: "shop_id required" });
+//   }
 
-  const findSql = `
-    SELECT *
-    FROM chats
-    WHERE client_id = ? AND shop_id = ?
-    LIMIT 1
-  `;
+//   const findSql = `
+//     SELECT *
+//     FROM chats
+//     WHERE client_id = ? AND shop_id = ?
+//     LIMIT 1
+//   `;
 
-  db.query(findSql, [client_id, shop_id], (err, results) => {
-    if (err) {
-      console.log("DB ERROR startConversation:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
+//   db.query(findSql, [client_id, shop_id], (err, results) => {
+//     if (err) {
+//       console.log("DB ERROR startConversation:", err);
+//       return res.status(500).json({ error: "Database error" });
+//     }
 
-    if (results.length > 0) {
-      return res.json(results[0]); // existing chat
-    }
+//     if (results.length > 0) {
+//       return res.json(results[0]); // existing chat
+//     }
 
-    const createSql = `
-      INSERT INTO chats 
-        (client_id, shop_id, started_at, last_message_at, is_active)
-      VALUES (?, ?, NOW(), NOW(), 1)
-    `;
+//     const createSql = `
+//       INSERT INTO chats 
+//         (client_id, shop_id, started_at, last_message_at, is_active)
+//       VALUES (?, ?, NOW(), NOW(), 1)
+//     `;
 
-    db.query(createSql, [client_id, shop_id], (err2, result2) => {
-      if (err2) {
-        console.log("DB ERROR createChat:", err2);
-        return res.status(500).json({ error: "Database error" });
-      }
+//     db.query(createSql, [client_id, shop_id], (err2, result2) => {
+//       if (err2) {
+//         console.log("DB ERROR createChat:", err2);
+//         return res.status(500).json({ error: "Database error" });
+//       }
 
-      return res.json({
-        id: result2.insertId,
-        client_id,
-        shop_id,
-        started_at: new Date(),
-        last_message_at: new Date(),
-        is_active: 1
-      });
-    });
-  });
-};
+//       return res.json({
+//         id: result2.insertId,
+//         client_id,
+//         shop_id,
+//         started_at: new Date(),
+//         last_message_at: new Date(),
+//         is_active: 1
+//       });
+//     });
+//   });
+// };
 
 /*
 ===========================================

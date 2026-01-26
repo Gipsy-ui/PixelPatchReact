@@ -1,3 +1,4 @@
+// src/components/ClientRepairRequestModalPage.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -9,13 +10,16 @@ export default function ClientRepairRequestModalPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const shop_id = location.state?.shop_id;  // <-- ONLY getting ID now
+  const shop_id = location.state?.shop_id; // Only ID
 
   const [shop, setShop] = useState(null);
   const [devices, setDevices] = useState([]);
   const [addresses, setAddresses] = useState([]);
 
-  // If no shop ID, go back
+  const [services, setServices] = useState([]);               // NEW
+  const [serviceTypes, setServiceTypes] = useState(null);     // NEW
+
+  // Ensure shop_id exists
   useEffect(() => {
     if (!shop_id) {
       console.error("No shop_id passed!");
@@ -23,7 +27,7 @@ export default function ClientRepairRequestModalPage() {
     }
   }, [shop_id]);
 
-  // Load shop by ID
+  // Load shop data
   useEffect(() => {
     if (!shop_id) return;
 
@@ -36,46 +40,54 @@ export default function ClientRepairRequestModalPage() {
       });
   }, [shop_id]);
 
-  // Load devices + addresses
-// Load devices + addresses
-useEffect(() => {
-  const loadData = async () => {
-    try {
-      const token = localStorage.getItem("token");
+  // Load devices, addresses, services, and service types
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
-      const devRes = await axios.get(`${API_BASE}/api/devices`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+        // Load user devices
+        const devRes = await axios.get(`${API_BASE}/api/devices`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setDevices(devRes.data.devices || []);
 
-      console.log("Loaded devices:", devRes.data);
-      
+        // Load user addresses
+        const addrRes = await axios.get(`${API_BASE}/api/addresses`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setAddresses(addrRes.data.addresses || []);
 
-      setDevices(devRes.data.devices || []);
+        // Load SHOP SERVICES
+        const servRes = await axios.get(
+          `${API_BASE}/api/shops/${shop_id}/services`
+        );
+        setServices(servRes.data.services || []);
 
-      const addrRes = await axios.get(`${API_BASE}/api/addresses`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      console.log("Loaded addresses:", addrRes.data);
+        // Load SHOP SERVICE TYPES (pickup/onsite/dropoff)
+        const typeRes = await axios.get(
+          `${API_BASE}/api/shop-services/types/${shop_id}`
+        );
+        setServiceTypes(typeRes.data.serviceTypes || null);
 
-      setAddresses(addrRes.data.addresses || []);
+      } catch (error) {
+        console.error("Failed loading data:", error);
+      }
+    };
 
-    } catch (error) {
-      console.error("Failed loading user data:", error);
-    }
-  };
+    loadData();
+  }, [shop_id]);
 
-  loadData();
-}, []);
-
-
-
-  if (!shop) return null; // Wait for loaded shop
+  if (!shop) return null;
+  if (!serviceTypes) return <div>Loading options...</div>;
 
   return (
     <RepairRequestModal
       shop={shop}
       userDevices={devices}
       userAddresses={addresses}
+      services={services}                // NEW
+      serviceTypes={serviceTypes}        // NEW
       onAddressAdded={setAddresses}
       onClose={() => navigate(-1)}
     />

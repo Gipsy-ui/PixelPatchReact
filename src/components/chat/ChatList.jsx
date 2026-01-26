@@ -1,5 +1,6 @@
 export default function ChatList({ chats, activeChat, onSelectChat }) {
-  const user = JSON.parse(localStorage.getItem("user"));  
+  const userRaw = localStorage.getItem("user") || sessionStorage.getItem("user");
+  const user = userRaw ? JSON.parse(userRaw) : null; 
   const myUserId = user.id;
 
   return (

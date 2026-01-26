@@ -1,3 +1,4 @@
+// src/constants/routes.js
 export const ROUTES = {
   HOME: '/',
   AI: '/ai',
@@ -43,6 +44,7 @@ export const ROUTES = {
   TERMS: '/terms',
   PRIVACY: '/privacy',
   REPAIRS: '/repairs',
+  CLIENT_REPAIR_DETAIL: '/repairs/:id',
   REPAIR_PENDING: '/repairs/:id/pending',
   REPAIRS_PENDING_LIST: '/repairs/pending',
   REPAIRS_ACCEPTED: '/repairs/accepted',
@@ -52,7 +54,7 @@ export const ROUTES = {
   REPAIRS_COMPLETED: '/repairs/completed',
   DEVICES: '/devices',
   SETTINGS: '/settings',
-
+  
   BUSINESS: {
     DASHBOARD: '/business',
     PROFILE: '/business/profile',
@@ -70,6 +72,7 @@ export const ROUTES = {
     REVIEWS: '/business/reviews',
     SETTINGS: '/business/settings',
     HELP: '/business/help',
+    DISPUTES: '/business/disputes',
   },
   LOGOUT: '/logout',
 };
