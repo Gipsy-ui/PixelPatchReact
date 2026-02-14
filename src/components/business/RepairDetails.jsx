@@ -5,7 +5,7 @@ import axios from "axios";
 import { ROUTES } from "../../constants/routes";
 import RejectionModal from "./RejectionModal";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://72.62.248.151";
 
 export default function RepairDetails() {
   const { id } = useParams();

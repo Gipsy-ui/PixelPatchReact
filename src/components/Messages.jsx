@@ -46,13 +46,9 @@ export default function ClientMessages() {
       setSidebarLoading(true);
 
       const res = await axios.get(
-        "http://localhost:5000/api/ai/conversations",
+        `${import.meta.env.VITE_API_URL}/api/ai/conversations`,
         { headers: authHeader() }
       );
-
-      console.log("Raw sidebar API response:", res.data);
-      console.log("Is array?", Array.isArray(res.data));
-      console.log("Conversation count:", res.data?.length);
 
       if (Array.isArray(res.data)) {
         res.data.forEach((c, i) => {
@@ -75,14 +71,22 @@ export default function ClientMessages() {
      AUTO-LOAD INITIAL ISSUE (UNCHANGED UX)
   ====================================================== */
   useEffect(() => {
-    const issue = sessionStorage.getItem("initial_ai_issue");
-    if (issue && !initialIssueSentRef.current) {
+    const pendingIssue = sessionStorage.getItem("pending_ai_issue");
+
+    if (pendingIssue && !initialIssueSentRef.current) {
       initialIssueSentRef.current = true;
-      if (!conversationId) return;
-      sendMessage(issue);
-      sessionStorage.removeItem("initial_ai_issue");
+
+      // Start clean
+      startNewChat();
+
+      // Send message immediately
+      sendMessage(pendingIssue);
+
+      // Remove it so it doesn't resend
+      sessionStorage.removeItem("pending_ai_issue");
     }
   }, []);
+
 
   // load chat history if conversationId changes
   useEffect(() => {
@@ -100,19 +104,13 @@ export default function ClientMessages() {
       setRecommendedShops([]);
       
       const res = await axios.get(
-        `http://localhost:5000/api/ai/conversations/${convId}/messages`,
+        `http://72.62.248.151/api/ai/conversations/${convId}/messages`,
         { headers: authHeader() }
       );
-      console.log("📨 Loading messages for conversation:", convId);
-      console.log("📨 🧠 AI analyze response::", res.data);
-      console.log("📦 Is array?", Array.isArray(res.data));
-      console.log("📦 Message count:", res.data?.length);
-      console.log("🧪 First raw message object:", res.data[0]);
       const formatted = res.data.map((m) => ({
         sender: m.sender,
         text: m.text,
       }));
-      console.log("🧨 setMessages", formatted)
       setMessages(formatted);
     } catch (err) {
       console.error("Failed to open conversation", err);
@@ -154,7 +152,7 @@ export default function ClientMessages() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/ai/analyze",
+        "http://72.62.248.151/api/ai/analyze",
         {
           text,
           conversation_id: conversationId || null,
@@ -176,7 +174,7 @@ export default function ClientMessages() {
       if (reply) {
         setMessages((prev) => [...prev, { sender: "ai", text: reply }]);
       }
-      console.log("📨 Raw messages API:", res.data);
+
       /* ----------------------------------------------
         SHOP HANDLING (UNCHANGED UX)
       ---------------------------------------------- */
@@ -223,7 +221,7 @@ export default function ClientMessages() {
 
   try {
     await axios.delete(
-      `http://localhost:5000/api/ai/conversations/${convId}`,
+      `http://72.62.248.151/api/ai/conversations/${convId}`,
       { headers: authHeader() }
     );
 
@@ -250,7 +248,7 @@ export default function ClientMessages() {
 
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/ai/conversations/${convId}/rename`,
+        `http://72.62.248.151/api/ai/conversations/${convId}/rename`,
         { newTitle },
         { headers: authHeader() }
       );
@@ -326,54 +324,57 @@ export default function ClientMessages() {
                   </p>
                 </div>
 
-                {/* ACTION BUTTONS */}
-                <div className="flex gap-2 ml-2">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRename(conv.id);
-                    }}
-                    className="text-xs text-blue-500 bg-white hover:text-blue-700"
-                  >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    className="h-5 w-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M16.862 3.487a2.25 2.25 0 013.182 3.182L8.25 18.463l-4.5 1.125 1.125-4.5L16.862 3.487z"
-                    />
-                  </svg>
-                  </button>
+                {/* ACTION BUTTONS (only if active) */}
+                {activeConversationId === conv.id && (
+                  <div className="flex gap-2 ml-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRename(conv.id);
+                      }}
+                      className="p-2 text-xs text-blue-500 bg-white hover:text-blue-700"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        className="h-5 w-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.862 3.487a2.25 2.25 0 013.182 3.182L8.25 18.463l-4.5 1.125 1.125-4.5L16.862 3.487z"
+                        />
+                      </svg>
+                    </button>
 
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(conv.id);
-                    }}
-                    className="text-xs text-red-500 bg-white hover:text-red-700"
-                  >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="2"
-                    stroke="currentColor"
-                    className="h-5 w-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 7h12M9 7V4h6v3m2 0v11a2 2 0 01-2 2H9a2 2 0 01-2-2V7h10z"
-                    />
-                  </svg>
-                  </button>
-                </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(conv.id);
+                      }}
+                      className="p-1 text-xs text-red-500 bg-white hover:text-red-700"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="2"
+                        stroke="currentColor"
+                        className="h-6 w-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 7h12M9 7V4h6v3m2 0v11a2 2 0 01-2 2H9a2 2 0 01-2-2V7h10z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+
               </li>
             ))}
           </ul>

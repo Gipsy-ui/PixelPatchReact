@@ -137,7 +137,7 @@ function BusinessSignUpPageThree() {
     try {
       // 4️⃣ Send API request to backend
       const response = await axios.post(
-        "http://localhost:5000/api/business-register",
+        `${import.meta.env.VITE_API_URL}/api/business-register`,
         finalData,
         {
           headers: {

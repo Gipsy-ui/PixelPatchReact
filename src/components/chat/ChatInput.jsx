@@ -4,37 +4,61 @@ import axios from "axios";
 
 export default function ChatInput({ chatId, onMessageSent, socket }) {
   const [text, setText] = useState("");
-  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+
+  const token =
+    localStorage.getItem("token") || sessionStorage.getItem("token");
 
   const sendMessage = async () => {
     if (!text.trim()) return;
+
     if (!chatId) {
       console.error("❌ No chatId provided to ChatInput");
       return;
     }
 
-    // Use socket if connected
-    if (socket && socket.connected) {
-      socket.emit("send_message", { chat_id: chatId, message_text: text }, (ack) => {
-        if (ack?.success) {
-          // server already broadcasted new_message; local ack optional
-          setText("");
-        } else {
-          console.error("Socket send failed:", ack);
+    console.log("Socket instance in ChatInput:", socket);
+
+    // PRIMARY METHOD: SOCKET
+    if (socket) {
+      console.log("Emitting send_message via socket:", chatId, text);
+
+      socket.emit(
+        "send_message",
+        { chat_id: chatId, message_text: text },
+        (ack) => {
+          console.log("Socket ACK response:", ack);
+
+          if (ack?.success) {
+            setText("");
+
+            // Optional refresh to keep things in sync
+            if (typeof onMessageSent === "function") {
+              onMessageSent();
+            }
+          } else {
+            console.error("Socket send failed:", ack);
+          }
         }
-      });
+      );
+
       return;
     }
 
-    // fallback to REST
+    // FALLBACK METHOD: REST API
+    console.warn("Socket not available, falling back to REST");
+
     try {
       await axios.post(
-        "http://localhost:5000/api/chat/send",
+        `${import.meta.env.VITE_API_URL}/api/chat/send`,
         { chat_id: chatId, message_text: text },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       setText("");
-      onMessageSent();
+
+      if (typeof onMessageSent === "function") {
+        onMessageSent();
+      }
     } catch (err) {
       console.error("SEND MSG ERROR:", err);
     }
@@ -47,9 +71,17 @@ export default function ChatInput({ chatId, onMessageSent, socket }) {
         placeholder="Type message..."
         value={text}
         onChange={(e) => setText(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            sendMessage();
+          }
+        }}
       />
-      <button onClick={sendMessage} className="px-4 py-2 bg-blue-600 text-white rounded-lg">
+
+      <button
+        onClick={sendMessage}
+        className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+      >
         Send
       </button>
     </div>

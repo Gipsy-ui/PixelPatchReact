@@ -153,7 +153,7 @@ export default function BusinessSignUpPageTwo() {
   /* Fetch categories from backend */
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/shop-services/categories")
+      .get(`${import.meta.env.VITE_API_URL}/api/shop-services/categories`)
       .then((res) => setCategories(res.data.categories))
       .catch(() => {
         alert("Unable to load service categories. Try again later.");

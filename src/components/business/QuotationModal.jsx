@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://72.62.248.151";
 
 export default function QuotationModal({ requestId, onClose, onSaved, existingQuotation }) {
   const [estimatedCompletionTime, setEstimatedCompletionTime] = useState("");

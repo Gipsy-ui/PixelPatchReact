@@ -1,8 +1,16 @@
 export default function ChatMessage({ message, chat }) {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const myId = user.id;
+  // Safely read current user
+  let myId = null;
 
-  const isMe = message.sender_id === myId;
+  try {
+    const userRaw = localStorage.getItem("user");
+    const user = userRaw ? JSON.parse(userRaw) : null;
+    myId = user?.id || null;
+  } catch (err) {
+    console.error("Failed to parse user from storage:", err);
+  }
+
+  const isMe = message?.sender_id === myId;
 
   // Determine role
   const amClient = chat?.client_id === myId;
@@ -10,20 +18,31 @@ export default function ChatMessage({ message, chat }) {
   // Determine sender label for OTHER person's messages
   let senderLabel = null;
 
-  if (!isMe) {
+  if (!isMe && chat) {
     if (amClient) {
       // I'm the client → other person is the SHOP
-      senderLabel = chat?.shop_name;
+      senderLabel = chat.shop_name || "Shop";
     } else {
       // I'm the shop owner → other person is the CLIENT
-      senderLabel = `${chat?.client_first} ${chat?.client_last}`;
+      const first = chat.client_first || "";
+      const last = chat.client_last || "";
+      senderLabel = `${first} ${last}`.trim() || "Client";
     }
   }
 
-  const timeFormatted = new Date(message.timestamp).toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  // Safe time formatting
+  let timeFormatted = "";
+
+  if (message?.timestamp) {
+    const date = new Date(message.timestamp);
+
+    if (!isNaN(date.getTime())) {
+      timeFormatted = date.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+      });
+    }
+  }
 
   return (
     <div className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
@@ -34,14 +53,18 @@ export default function ChatMessage({ message, chat }) {
       >
         {/* Only show name for received messages */}
         {!isMe && senderLabel && (
-          <div className="font-semibold text-sm mb-1">{senderLabel}</div>
+          <div className="font-semibold text-sm mb-1">
+            {senderLabel}
+          </div>
         )}
 
-        <div>{message.message_text}</div>
+        <div>{message?.message_text || ""}</div>
 
-        <div className="text-xs opacity-70 mt-1 text-right">
-          {timeFormatted}
-        </div>
+        {timeFormatted && (
+          <div className="text-xs opacity-70 mt-1 text-right">
+            {timeFormatted}
+          </div>
+        )}
       </div>
     </div>
   );

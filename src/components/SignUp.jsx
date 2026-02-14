@@ -79,7 +79,7 @@ const SignUp = () => {
 
     const sendOtp = async () => {
         try {
-            await axios.post("http://localhost:5000/api/auth/send-otp", {
+            await axios.post("http://72.62.248.151/api/auth/send-otp", {
                 email: formData.email
             });
 
@@ -99,7 +99,7 @@ const SignUp = () => {
 
     const verifyOtp = async () => {
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/verify-otp", {
+            const res = await axios.post("http://72.62.248.151/api/auth/verify-otp", {
                 email: formData.email,
                 otp: otp.join("")
             });
@@ -211,7 +211,7 @@ const SignUp = () => {
                 formDataPhoto.append("photo", photoFile);
 
                 const uploadRes = await axios.post(
-                    "http://localhost:5000/api/upload/photo",
+                    "http://72.62.248.151/api/upload/photo",
                     formDataPhoto,
                     {
                         headers: { "Content-Type": "multipart/form-data" },
@@ -224,7 +224,7 @@ const SignUp = () => {
             // -------------------------------
             // 2. Register the user
             // -------------------------------
-            const response = await axios.post("http://localhost:5000/api/auth/register", {
+            const response = await axios.post("http://72.62.248.151/api/auth/register", {
                 role_id: 1,
                 first_name: formData.firstName,
                 middle_name: formData.middleName,
@@ -353,7 +353,7 @@ const SignUp = () => {
                                     type="button"
                                     disabled={validationStates.email.state !== "success"}
                                     onClick={sendOtp}
-                                    className={`mt-1 px-3 py-2 text-sm rounded-md border transition
+                                    className={`mt-1 px-3 py-2 text-sm rounded-md bg-white border transition
                                         ${validationStates.email.state === "success"
                                             ? "border-blue-500 text-blue-600 hover:bg-blue-50"
                                             : "border-gray-300 text-gray-400 cursor-not-allowed"
@@ -458,7 +458,7 @@ const SignUp = () => {
                                 <button
                                     type="button"
                                     onClick={() => togglePasswordVisibility('password')}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center bg-white text-gray-400 hover:text-gray-600"
                                 >
                                     <i className={`fas ${showPassword.password ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                                 </button>
@@ -482,7 +482,7 @@ const SignUp = () => {
                                 <button
                                     type="button"
                                     onClick={() => togglePasswordVisibility('confirmPassword')}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center bg-white text-gray-400 hover:text-gray-600"
                                 >
                                     <i className={`fas ${showPassword.confirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                                 </button>

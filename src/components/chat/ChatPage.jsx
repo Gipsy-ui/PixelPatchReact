@@ -1,76 +1,83 @@
-// src/components/chat/ChatPage.jsx
-import React, { useEffect, useState, useRef  } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ChatList from "./ChatList";
 import ChatWindow from "./ChatWindow";
 import axios from "axios";
-import { io } from "socket.io-client";
+import { useSocket } from "../../context/SocketContext";
 import { useLocation } from "react-router-dom";
 
 export default function ChatPage() {
   const autoStartRef = useRef(false);
+  const activeChatRef = useRef(null);
+
+  const socket = useSocket();
+
   const [chats, setChats] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState(null);
-  const [autoStarted, setAutoStarted] = useState(false);
 
   const token = localStorage.getItem("token");
   const location = useLocation();
   const shopFromLink = location.state?.shop || null;
 
   /* --------------------------------------------
-     1. SOCKET CONNECTION
+     1. LISTEN FOR SOCKET MESSAGES
   -------------------------------------------- */
   useEffect(() => {
-    if (!token) return;
+    if (!socket) return;
 
-    const s = io("http://localhost:5000", {
-      auth: { token },
-    });
-
-    s.on("connect", () => console.log("socket connected", s.id));
-
-    s.on("new_message", (msg) => {
-      if (msg.chat_id === activeChat) {
+    const handleNewMessage = (msg) => {
+      if (String(msg.chat_id) === String(activeChatRef.current)) {
         setMessages((prev) => [...prev, msg]);
-      } else {
-        // update chat list last message time
-        setChats((prev) => {
-          const idx = prev.findIndex((c) => c.id === msg.chat_id);
-          if (idx !== -1) {
-            const updated = [...prev];
-            const chat = updated[idx];
-            chat.last_message_at = msg.timestamp;
-            updated.splice(idx, 1);
-            return [chat, ...updated];
-          }
-          return prev;
-        });
       }
-    });
 
-    setSocket(s);
-    return () => s.disconnect();
-  }, [token]);
+      setChats((prev) => {
+        const idx = prev.findIndex((c) => String(c.id) === String(msg.chat_id));
+        if (idx !== -1) {
+          const updated = [...prev];
+          const chat = { ...updated[idx] };
+          chat.last_message_at = msg.timestamp;
+
+          updated.splice(idx, 1);
+          return [chat, ...updated];
+        }
+        return prev;
+      });
+    };
+
+    socket.on("new_message", handleNewMessage);
+
+    return () => {
+      socket.off("new_message", handleNewMessage);
+    };
+  }, [socket]);
 
   /* --------------------------------------------
-     2. LOAD ALL CHATS
+     2. TRACK ACTIVE CHAT
+  -------------------------------------------- */
+  useEffect(() => {
+    activeChatRef.current = activeChat;
+
+    if (socket && activeChat) {
+      socket.emit("join", activeChat);
+    }
+  }, [activeChat, socket]);
+
+  /* --------------------------------------------
+     3. LOAD ALL CHATS
   -------------------------------------------- */
   useEffect(() => {
     if (!token) return;
 
     axios
-      .get("http://localhost:5000/api/chat", {
+      .get(`${import.meta.env.VITE_API_URL}/api/chat`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => {
-        setChats(res.data);
-      })
+      .then((res) => setChats(res.data))
       .catch((err) => console.error("CHAT LIST ERROR:", err));
   }, [token]);
 
   /* --------------------------------------------
-     3. AUTO-START CHAT (if coming from a shop)
+     4. AUTO-START CHAT FROM SHOP LINK
   -------------------------------------------- */
   useEffect(() => {
     if (!shopFromLink) return;
@@ -80,7 +87,6 @@ export default function ChatPage() {
     if (!shopId) return;
 
     autoStartRef.current = true;
-    console.log("AUTO-START triggered for shop:", shopId);
 
     const existingChat = chats.find((c) => c.shop_id === shopId);
 
@@ -91,7 +97,7 @@ export default function ChatPage() {
 
     axios
       .post(
-        "http://localhost:5000/api/chat/start",
+        `${import.meta.env.VITE_API_URL}/api/chat/start`,
         { shop_id: shopId },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -103,45 +109,46 @@ export default function ChatPage() {
       .catch((err) => console.error("CREATE CHAT ERROR:", err));
   }, [shopFromLink, chats, token]);
 
-
   /* --------------------------------------------
-     4. AUTO-OPEN MOST RECENT CHAT (if not auto-starting)
+     5. AUTO-OPEN MOST RECENT CHAT
   -------------------------------------------- */
   useEffect(() => {
-    if (autoStarted) return;
-    if (activeChat) return;
-
-    if (chats.length > 0) {
+    if (!activeChat && chats.length > 0) {
       setActiveChat(chats[0].id);
     }
-  }, [chats, autoStarted]);
+  }, [chats]);
 
   /* --------------------------------------------
-     5. LOAD MESSAGES FOR ACTIVE CHAT
+     6. LOAD MESSAGES FOR ACTIVE CHAT
   -------------------------------------------- */
   useEffect(() => {
     if (!activeChat || !token) return;
 
-    if (socket) socket.emit("join", activeChat);
-
     axios
-      .get(`http://localhost:5000/api/chat/${activeChat}/messages`, {
+      .get(`${import.meta.env.VITE_API_URL}/api/chat/${activeChat}/messages`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setMessages(res.data))
       .catch((err) => console.error("CHAT MSG ERROR:", err));
 
     return () => {
-      if (socket) socket.emit("leave", activeChat);
+      socket?.emit("leave", activeChat);
     };
-  }, [activeChat, socket, token]);
+  }, [activeChat, token, socket]);
 
-  const refreshMessages = () =>
-    axios
-      .get(`http://localhost:5000/api/chat/${activeChat}/messages`, {
+  /* --------------------------------------------
+     7. MANUAL REFRESH (FALLBACK)
+  -------------------------------------------- */
+  const refreshMessages = () => {
+    if (!activeChat) return;
+
+    return axios
+      .get(`${import.meta.env.VITE_API_URL}/api/chat/${activeChat}/messages`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => setMessages(res.data));
+      .then((res) => setMessages(res.data))
+      .catch((err) => console.error("REFRESH ERROR:", err));
+  };
 
   /* --------------------------------------------
      UI

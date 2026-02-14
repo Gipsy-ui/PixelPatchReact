@@ -6,7 +6,7 @@
   import { ROUTES } from "../../constants/routes";
   import { RejectionModal } from "./index";
 
-  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+  const API_BASE = import.meta.env.VITE_API_URL || "http://72.62.248.151";
 
   export default function Repair() {
     const [repairs, setRepairs] = useState([]);
@@ -146,7 +146,8 @@
               cell: (row) => {
                 const id = row.id.toString();
                 const viewPath = ROUTES.BUSINESS.REPAIR_DETAIL.replace(":id", id);
-                const isRejected = row.decisionStatus?.toLowerCase() === "rejected";
+                const status = row.decisionStatus?.toLowerCase();
+                const isDisabled = status === "rejected" || status === "accepted";
 
                 return (
                   <div className="flex items-center gap-3">   {/* ALIGN CENTER FIX */}
@@ -158,11 +159,11 @@
                     </Link>
 
                     <button
-                      disabled={isRejected}
+                      disabled={isDisabled}
                       onClick={() => handleReject(id)}
-                      className={`py-1 font-medium  bg-white
+                      className={`py-1 font-medium bg-white
                         ${
-                          isRejected
+                          isDisabled
                             ? "text-gray-400 cursor-not-allowed"
                             : "text-red-600 hover:text-red-800"
                         }

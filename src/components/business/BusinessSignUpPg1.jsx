@@ -368,7 +368,7 @@ export default function BusinessSignUpPageOne() {
         <div className="flex justify-end gap-4 mt-8 pt-6 border-t border-gray-200">
           <button
             type="button"
-            onClick={() => navigate(ROUTES.PARTNER)}
+            onClick={() => navigate(ROUTES.HOME)}
             className="px-6 py-3 rounded-lg bg-white border border-gray-300 shadow-sm"
           >
             Back

@@ -52,6 +52,7 @@ import Settings from "./components/Settings";
 import Help from "./components/Help";
 import About from "./components/About";
 import Devices from "./components/Devices";
+import { SocketProvider } from "./context/SocketContext";
 
 /* ---------- BUSINESS ---------- */
 import BusinessLayout from "./components/business/components/BusinessLayout";
@@ -92,6 +93,7 @@ const {
 function App() {
   return (
     <Router>
+      <SocketProvider>
       <ErrorBoundary>
         <Routes>
 
@@ -327,6 +329,7 @@ function App() {
 
         </Routes>
       </ErrorBoundary>
+      </SocketProvider>
     </Router>
   );
 }

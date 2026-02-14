@@ -24,7 +24,7 @@ const ShopProfile = () => {
     setLoading(true);
 
     axios
-      .get(`http://localhost:5000/api/shops/${id}`)
+      .get(`http://72.62.248.151/api/shops/${id}`)
       .then((res) => setShop(res.data.shop))
       .catch((err) => console.error("Shop fetch error:", err))
       .finally(() => setLoading(false));
@@ -35,17 +35,17 @@ const ShopProfile = () => {
     if (!shop?.id) return;
 
     axios
-      .get(`http://localhost:5000/api/shops/${shop.id}/services`)
+      .get(`http://72.62.248.151/api/shops/${shop.id}/services`)
       .then((res) => setServices(res.data.services))
       .catch(() => setServices([]));
 
     axios
-      .get(`http://localhost:5000/api/shops/${shop.id}/reviews`)
+      .get(`http://72.62.248.151/api/shops/${shop.id}/reviews`)
       .then((res) => setReviews(res.data.reviews))
       .catch(() => setReviews([]));
 
     axios
-      .get(`http://localhost:5000/api/shops/${shop.id}/documents`)
+      .get(`http://72.62.248.151/api/shops/${shop.id}/documents`)
       .then((res) => setDocuments(res.data.documents))
       .catch(() => setDocuments([]));
   }, [shop]);

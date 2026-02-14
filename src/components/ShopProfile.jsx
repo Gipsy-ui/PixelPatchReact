@@ -57,7 +57,7 @@ const ShopProfile = () => {
       })
       .finally(() => setLoadingShop(false));
   }, [id]);
-  console.log("FINAL SHOP =", shop);
+
   /* -----------------------------------------------------------
      FETCH EXTRAS — services, reviews, documents
   ----------------------------------------------------------- */
@@ -107,8 +107,6 @@ const ShopProfile = () => {
   ]
     .filter(Boolean)
     .join(", ");
-    console.log("shopFromLink =", shopFromState);
-    console.log("shop_id I'm sending =", shopFromState?.id);
 
     /* -----------------------------------------------------------
       TIME & STATUS HELPERS

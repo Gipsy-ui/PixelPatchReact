@@ -1,11 +1,11 @@
 import { useState, useEffect  } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 
 
 const Login = () => {
-
+  const navigate = useNavigate();
   useEffect(() => {
     /* global google */
     if (window.google) {
@@ -27,7 +27,7 @@ const Login = () => {
       client_id: GOOGLE_CLIENT_ID,
       callback: async (response) => {
         try {
-          const res = await axios.post("http://localhost:5000/api/auth/google-login", {
+          const res = await axios.post("http://72.62.248.151/api/auth/google-login", {
             credential: response.credential,
           });
 
@@ -35,7 +35,13 @@ const Login = () => {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("user", JSON.stringify(res.data.user));
 
-          window.location.replace("/dashboard-ai");
+          const pendingIssue = sessionStorage.getItem("pending_ai_issue");
+
+          if (pendingIssue) {
+            navigate("/messages");
+          } else {
+            navigate("/");
+          }
 
         } catch (err) {
           console.error(err);
@@ -88,7 +94,7 @@ const Login = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", {
+      const response = await axios.post("http://72.62.248.151/api/auth/login", {
         email: formData.email,
         password: formData.password
       });
@@ -111,7 +117,13 @@ const Login = () => {
 
 
       // Silent redirect (no alert)
-      window.location.replace("/");
+      const pendingIssue = sessionStorage.getItem("pending_ai_issue");
+
+      if (pendingIssue) {
+        navigate("/messages");
+      } else {
+        navigate("/");
+      }
 
     } catch (error) {
       console.error("Login error:", error);
@@ -205,7 +217,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-white text-gray-500 hover:text-gray-700"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
@@ -288,7 +300,7 @@ const Login = () => {
               type="button"
               id="googleLogin"
               onClick={handleGoogleLogin}
-              className="font-semibold border border-gray-300 flex items-center justify-center w-full py-3 rounded-lg hover:bg-gray-100 transition-all duration-200 shadow-sm hover:shadow-md"
+              className="font-semibold border bg-white border-gray-300 flex items-center justify-center w-full py-3 rounded-lg hover:bg-gray-100 transition-all duration-200 shadow-sm hover:shadow-md"
             >
               <img
                 src="https://www.svgrepo.com/show/355037/google.svg"

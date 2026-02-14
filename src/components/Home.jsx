@@ -41,39 +41,27 @@ export default function HomeLoggedInAI() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isProfileOpen]);
 
-  // NEW — Only redirect IF they have truly started a chat
-  useEffect(() => {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    const hasStartedChat = localStorage.getItem("hasStartedChat");
-
-    if (token && hasStartedChat === "true") {
-      navigate(ROUTES.MESSAGES);
-    }
-  }, [navigate]);
-
 
   // SEND BUTTON — KEEPING ALL YOUR LOGIC
   const handleSend = () => {
+    if (!input.trim()) return;
+
+    // Save message safely in sessionStorage
+    sessionStorage.setItem("pending_ai_issue", input);
+
     if (!token) {
       navigate(ROUTES.LOGIN);
       return;
     }
 
-    if (!input.trim()) return;
-
-    // Mark chat as started
-    localStorage.setItem("hasStartedChat", "true");
-
-    // Store issue for Messages.jsx
-    sessionStorage.setItem("initial_ai_issue", input);
-
-    // Optional: loader animation
     setIsLoading(true);
 
     setTimeout(() => {
       navigate(ROUTES.MESSAGES);
     }, 600);
   };
+
+
 
 
   return (

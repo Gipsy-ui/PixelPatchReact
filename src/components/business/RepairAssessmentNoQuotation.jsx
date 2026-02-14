@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import QuotationModal from "./QuotationModal.jsx";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_URL || "http://72.62.248.151";
 
 const RepairAssessmentNoQuotation = () => {
   const navigate = useNavigate();

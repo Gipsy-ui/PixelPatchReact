@@ -1,11 +1,11 @@
 // server/server.js
+
+import "./loadEnv.js"
+
 import express from "express";
 import cors from "cors";
-import http from "http";   
-import dotenv from "dotenv";
+import http from "http";
 import path from "path";
-
-dotenv.config();
 
 import chatRoutes from "./routes/chat.js";
 import businessRoutes from "./routes/businessRoutes.js";
@@ -27,14 +27,11 @@ import repairRoutes from "./routes/repairRoutes.js";
 import userDevicesRoutes from "./routes/userDevices.routes.js";
 import userProfileRoutes from "./routes/userProfile.routes.js";
 
-
 // ROUTES FOR REPAIR REQUESTS CLIENT SIDE
 import clientRepairsRoutes from "./routes/clientRepairsRoutes.js";
 
 // ROUTES FOR SHOP'S PUBLIC SERVICES AND SHOPS
 import publicServicesRoutes from "./routes/publicServices.routes.js";
-
-
 
 // Routes for Repair Requests
 import devices from "./routes/devices.js";
@@ -44,7 +41,6 @@ import serviceRequests from "./routes/serviceRequests.js";
 // Routes for Business Employees
 import employeeRoutes from "./routes/business/employeeRoutes.js";
 
-// Rotes for Payment Handling
 // BUSINESS PAYMENT ROUTES
 import paymentRoutes from "./routes/business/paymentRoutes.js";
 
@@ -60,17 +56,10 @@ import disputesRoutes from "./routes/disputes.routes.js";
 // Initialize Express app
 const app = express();
 
-// authentication middleware (your JWT/session)
-// app.use((req, res, next) => {
-//   req.user = { id: 5 }; // <-- TEMPORARY (Replace with real auth)
-//   next();
-// });
-
 app.use((req, res, next) => {
   console.log("➡️ Incoming:", req.method, req.originalUrl);
   next();
 });
-
 
 app.use(cors());
 app.use(express.json());
@@ -104,9 +93,9 @@ app.use("/api/service-requests", serviceRequests);
 app.use("/api", businessRoutes);
 app.use("/api/business/repairs", repairRoutes);
 
-
 // BUSINESS EMPLOYEE ROUTES
 app.use("/api/business", employeeRoutes);
+
 // BUSINESS DASHBOARD ROUTES
 app.use("/api/business", businessDashboardRoutes);
 
@@ -118,7 +107,6 @@ app.use("/api", chatRoutes);
 
 /* XENDIT WEBHOOKS */
 app.use("/api/webhooks", xenditWebhookRoutes);
-
 
 // client repair routes
 app.use("/api/client", clientRepairsRoutes);
@@ -132,22 +120,17 @@ app.use("/api/disputes", disputesRoutes);
 // PUBLIC SERVICES AND SHOPS
 app.use("/api/public", publicServicesRoutes);
 
-
-
 // SOCKET.IO SERVER
 const httpServer = http.createServer(app);
 
-// Socket.IO setup
 import { Server as IOServer } from "socket.io";
 const io = new IOServer(httpServer, {
   cors: { origin: true, credentials: true },
 });
 
-// Load socket handlers
 import setupChatSockets from "./sockets/chatSocket.js";
 setupChatSockets(io);
 
-// Only ONE listener — use httpServer
-httpServer.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+httpServer.listen(process.env.PORT || 5000, () => {
+  console.log("Server running on port " + (process.env.PORT || 5000));
 });

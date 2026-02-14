@@ -44,7 +44,7 @@ export default function BusinessDashboard() {
     setLoading(true);
 
     axios
-      .get(`http://localhost:5000/api/business/dashboard?range=${range}`, {
+      .get(`${import.meta.env.VITE_API_URL}/api/business/dashboard?range=${range}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
